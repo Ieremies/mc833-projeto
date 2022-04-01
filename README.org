@@ -1,1 +1,43 @@
-#+Title Projeto 1 - MC833
+#+Title: Projeto 1 - MC833
+
+* TCP Client-server
+** Server side
+socket() -> bind() -> listen() -> accept() --{ blocks until connection from client }--> repeat : [read() -> write()] -> read() -> close()
+
+A cada accept inicia uma nova conexão.
+
+#+begin_source c
+int main ()
+{
+    int status;
+    struct addrinfo hints;
+    struct addrinfo *servinfo;
+
+    menset ( &hints, 0, sizeof ( hints ) )
+    hints.ai
+
+    // [ ... ]
+
+
+    gettaddrsinfo ( NULL, "3490", &hints, &res );
+
+    sockfd = socket ( res->ai_family, res->ai_socket_type, res->ai_protocol )
+    if ( sockfd < 0 )
+        printf ( "Socket creation failled!\n" );
+
+    if ( bind ( sockfd, res->ai_addr, res->ai_addrlen ) < 0 )
+        printf ( "Failled to bind to socket!\n" );
+
+    listen
+}
+#+end_source
+** Client side
+
+#+begin_source c
+int main ()
+{
+    if ( connect ( sockfd, res->ai_addr, res->aiaddrlen ) < 0 )
+        perror ( "Failled to connect to server!\n" );
+}
+#+end_source
+* Ideias
