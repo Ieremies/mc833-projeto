@@ -1,5 +1,77 @@
 #+Title: Projeto 1 - MC833
 
+* Requerimentos
+Projetos 1 e 2: Desenvolva programas para o uso de sockets na comunicação cliente com
+- servidor concorrente sobre TCP (projeto 1), e
+- servidor iterativo sobre UDP (projeto 2)
+usando um objeto servidor de streaming de vídeo (filmes) que suporta múltiplos usuários.
+
+O servidor armazena as seguintes informações sobre os filmes:
+- identificador numérico,
+- título,
+- gênero,
+- diretor(a),
+ -ano de lançamento,
+- [UDP] e uma imagem capa.
+
+Pelo menos as seguintes operações devem ser realizadas por um usuário (cliente):
+- cadastrar um novo filme, determinando um identificador numérico no cadastro;
+- acrescentar um novo gênero em um filme;
+- listar todos os títulos, junto a seus respectivos identificadores;
+- listar informações (título, diretor(a) e ano) de todos os filmes de um determinado gênero;
+- listar todas as informações de todos os filmes;
+- listar todas as informações de um filme a partir de seu identificador;
+- remover um filme a partir de seu identificador.
+- [UDP] baixar uma imagem capa de um filme a partir de seu identificador;
+
+Considere que o servidor será administrado por um operador do serviço de streaming, o qual será o
+único usuário a realizar operações de escrita (inserção, alteração e remoção de filmes). Não é
+necessário que o sistema faça autenticação de usuários através de senhas ou outros mecanismos.
+
+Dado que um filme pode conter múltiplos gêneros, o campo gênero de um filme poderá ser
+manipulado como uma string, podendo-se considerar que um filme pertence a um gênero se este for
+uma substring do campo de gênero de um filme.
+
+Em relação às imagens capa, podem ser utilizadas (no contexto deste projeto) imagens gratuitas e
+sem direitos autorais encontradas em websites. Os dados deverão ser armazenados pelo servidor
+como arquivos.
+
+Nos testes a serem realizados, deverão ser cadastrados de 5 a 10 filmes.
+Sugere-se, mas não é obrigatório, o uso de máquinas diferentes para cliente e servidor.
+
+Opcional – coletar as seguintes medidas de atrasos:
+- Tempo de Resposta da Requisição: entre o envio de uma requisição do cliente e o recebimento
+da resposta do servidor.
+- Processamento: entre o recebimento da requisição no servidor e o envio da resposta ao cliente.
+- Comunicação: obtido a partir da subtração dos valores acima.
+- [UDP] Posteriormente, compare essas medidas para diferentes tipos de operações (listagem das
+informações de um filme, e listagem das informações de todos os filmes), entre os protocolos
+TCP e UDP
+
+** Entregar:
+Datas de entrega:
+Projeto 1: 4 de Maio;
+Projeto 2: 25 de Maio.
+*** Código fonte (com makefile)
+Os programas desenvolvidos em C. Devem estar bem estruturados e com comentários
+descrevendo os procedimentos. Devem permitir a compilação e execução;
+*** Relatório.
+Deve conter introdução, descrição geral e casos de uso, armazenamento e estruturas de
+dados, detalhes de implementação, e conclusão. Para o projeto 2, manter a estrutura do trabalho 1,
+acrescido de uma seção com a comparação entre o software desenvolvido nos dois projetos em termos
+de tamanho de código, confiabilidade, e nível de abstração. Caso opte por coletar as medidas de atraso
+descritas anteriormente (opcional), elabore uma comparação dos valores de atraso de comunicação
+obtidos nos dois projetos, em uma operação de listagem das informações de um filme, e também em
+uma operação de listagem das informações de todos os filmes.
+** Exemplos de filmes:
+Título: O Resgate do Soldado Brian
+Gênero: Drama, Guerra
+Diretor(a): Steven Spielburg
+Ano de Lançamento: 1999
+Título: Djanko Livre
+Gênero: Ação, Faroeste
+Diretor(a): Quentin Tarantoni
+Ano de Lançamento: 2013
 * TCP Client-server
 ** Server side
 socket() -> bind() -> listen() -> accept() --{ blocks until connection from client }--> repeat : [read() -> write()] -> read() -> close()

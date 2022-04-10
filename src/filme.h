@@ -1,9 +1,4 @@
-
-
-typedef struct {
-    char **genero;
-    int qtd;
-} Genero;
+#import "generos.h"
 
 typedef struct {
     int id;
@@ -14,8 +9,8 @@ typedef struct {
     // imagem capa;
 } Filme;
 
-Filme *create_filme(char *titulo, char *genero, char *diretor, int ano);
+Filme *criar_filme(char *titulo, char *genero, char *diretor, int ano);
 void adiciona_genero(Filme *filme, char *genero);
+void deletar_filme(Filme *filme);
 void print(Filme *filme);
 void print_titulo_id(Filme *filme);
-void delete_filme(Filme *filme);
