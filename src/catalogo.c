@@ -17,6 +17,6 @@ void adicionar_filme(Catalogo *catalogo, Filme *filme) {
 }
 void deletar_catalogo(Catalogo *catalogo) {
     for (int i = 0; i < catalogo->qtd; i++)
-        delete_filme(catalogo->lista[i]);
+        deletar_filme(catalogo->lista[i]);
     free(catalogo);
 }
