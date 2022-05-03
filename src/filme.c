@@ -20,7 +20,7 @@ void adiciona_genero(Filme *filme, char *novo_genero) {
     adiciona_generos(filme->generos, novo_genero);
 }
 
-void print(Filme *filme) {
+void print_filme(Filme *filme) {
     printf("%d %s %s %d\n", filme->id, filme->titulo, filme->diretor,
            filme->ano);
     // TODO print generos!

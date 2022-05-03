@@ -28,6 +28,12 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
+void handle_client(int new_fd) {
+    if (send(new_fd, "Hello, world!", 13, 0) == -1)
+        perror("send");
+    close(new_fd);
+}
+
 int main() {
     int sockfd, new_fd, code; // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
@@ -106,9 +112,7 @@ int main() {
 
         if (!fork()) {     // this is the child process
             close(sockfd); // child doesn't need the listener
-            if (send(new_fd, "Hello, world!", 13, 0) == -1)
-                perror("send");
-            close(new_fd);
+            handle_client(new_fd);
             exit(0);
         }
         close(new_fd); // parent doesn't need this

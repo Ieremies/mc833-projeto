@@ -16,6 +16,38 @@
 
 #define MAXDATASIZE 100 // max number of bytes we can get at once
 
+void add() { printf("\nadd running\n"); }
+
+void print() { printf("\nprint_filme running\n"); }
+
+void (*handlers[])() = {add, print};
+
+void print_menu() {
+    system("clear");
+    printf("0 - add");
+    printf("\n1 - print_filme");
+    printf("\ne - exit");
+    printf("\nDigite um comando: ");
+}
+
+void handle_user() {
+    char cmd;
+    print_menu();
+    while (scanf(" %c", &cmd) == 1) {
+        if (cmd == 'e')
+            break;
+
+        cmd -= '0'; // converts to number
+        // Checks if is a valid command:
+        if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void (*)()))
+            handlers[cmd]();
+        else
+            printf("\nInvalid command\n");
+        sleep(1);
+        print_menu();
+    }
+}
+
 int main(int argc, char *argv[]) {
     int sockfd, numbytes;
     char buf[MAXDATASIZE];
@@ -62,8 +94,11 @@ int main(int argc, char *argv[]) {
     inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr), s,
               sizeof s);
     printf("client: connecting to %s\n", s);
+    sleep(1);
 
     freeaddrinfo(servinfo); // all done with this structure
+
+    handle_user();
 
     if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
         perror("recv");
