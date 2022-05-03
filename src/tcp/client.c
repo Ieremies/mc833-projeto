@@ -15,59 +15,58 @@
 
 #define PORT "3490" // the port client will be connecting to
 
-#define MAXDATASIZE 100 // max number of bytes we can get at once
-
-void post_movie(int socket) {
-    Movie movie;
-    char movie_str[sizeof(Movie)];
+Payload post_movie() {
+    Payload ret;
+    ret.op = POST;
 
     system("clear");
     printf("Cadastro de filme");
 
     printf("\nDigite o id do filme: ");
-    scanf("%d", &movie.id);
+    scanf("%d", &ret.movie.id);
     getchar(); // ignores the leading \n
 
     printf("Digite o titulo do filme: ");
-    fgets(movie.title, MAX_STR_LEN, stdin);
+    fgets(ret.movie.title, MAX_STR_LEN, stdin);
 
     printf("Digite o numero de generos desse filme: ");
-    scanf("%d", &movie.num_genres);
+    scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
-    for (int i = 0; i < movie.num_genres; i++) {
+    for (int i = 0; i < ret.movie.num_genres; i++) {
         printf("Digite o %dº genero desse filme: ", i + 1);
-        fgets(movie.genre_list[i], MAX_STR_LEN, stdin);
+        fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
     }
 
     printf("Digite o nome do diretor desse filme: ");
-    fgets(movie.director_name, MAX_STR_LEN, stdin);
+    fgets(ret.movie.director_name, MAX_STR_LEN, stdin);
 
     printf("Digite o ano desse filme: ");
-    scanf("%d", &movie.year);
+    scanf("%d", &ret.movie.year);
     getchar(); // ignores the leading \n
 
-    // Coverts the Movie to a byte stream:
-    memcpy(movie_str, &movie, sizeof(Movie));
-
-    if (send(socket, movie_str, sizeof(Movie), 0) == -1)
-        perror("send");
+    return ret;
 }
 
-void print(int socket) { printf("\nprint_movie running\n"); }
+Payload put_genre() {
+    Payload ret;
+    ret.op = PUT;
 
-void (*handlers[])(int) = {post_movie, print};
+    return ret;
+}
+
+Payload (*handlers[])() = {post_movie, put_genre};
 
 void print_menu() {
     system("clear");
     printf("0 - Cadastrar um novo filme");
-    printf("\n1 - print_movie");
+    printf("\n1 - Acrescentar um novo gênero em um filme");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
 
 void handle_user(int socket) {
-    char cmd;
+    char cmd, payload_str[sizeof(Payload)];
     print_menu();
     while (scanf(" %c", &cmd) == 1) {
         if (cmd == 'e')
@@ -75,18 +74,29 @@ void handle_user(int socket) {
 
         cmd -= '0'; // converts to number
         // Checks if is a valid command:
-        if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void (*)()))
-            handlers[cmd](socket);
-        else
+        if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
+            Payload payload = handlers[cmd](socket);
+
+            // Coverts the Payload to a byte stream:
+            memcpy(payload_str, &payload, sizeof(Payload));
+            if (send(socket, payload_str, sizeof(Payload), 0) == -1)
+                perror("send");
+        } else
             printf("\nInvalid command\n");
         sleep(1);
         print_menu();
     }
+
+    Payload payload;
+    payload.op = EXIT;
+    // Coverts the Payload to a byte stream:
+    memcpy(payload_str, &payload, sizeof(Payload));
+    if (send(socket, payload_str, sizeof(Payload), 0) == -1)
+        perror("send");
 }
 
 int main(int argc, char *argv[]) {
-    int sockfd, numbytes;
-    char buf[MAXDATASIZE];
+    int sockfd;
     struct addrinfo hints, *servinfo, *p;
     int rv;
     char s[INET6_ADDRSTRLEN];

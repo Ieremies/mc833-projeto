@@ -2,7 +2,7 @@
 ** server.c -- a stream socket server demo
 */
 
-#include "movie.h"
+#include "catalog.h"
 #include "net_utils.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -29,15 +29,29 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
-void handle_client(int socket) {
-    Movie movie;
-    char movie_str[sizeof(Movie)];
+void post_movie(Movie movie) {}
 
-    if (recv(socket, movie_str, sizeof(Movie), 0) == -1)
-        perror("recv");
-    // Coverts a byte stream to a Movie:
-    memcpy(&movie, movie_str, sizeof(Movie));
-    close(socket);
+void put_movie(Movie movie) {}
+
+void (*handlers[])(Movie) = {post_movie, put_movie};
+
+void handle_client(int socket) {
+    Payload payload;
+    char payload_str[sizeof(Payload)];
+    while (1) {
+        if (recv(socket, payload_str, sizeof(Payload), 0) == -1)
+            perror("recv");
+
+        // Coverts a byte stream to a Payload object:
+        memcpy(&payload, payload_str, sizeof(Payload));
+        if (payload.op == EXIT)
+            break;
+        if (payload.op < 0 || payload.op > EXIT) {
+            printf("\nInvalid operation\n");
+            continue;
+        }
+        handlers[payload.op](payload.movie); // execute the action
+    }
 }
 
 int main() {
@@ -103,6 +117,7 @@ int main() {
         exit(1);
     }
 
+    Catalog *catalog = create_catalog();
     printf("server: waiting for connections...\n");
     while (1) { // main accept() loop
         sin_size = sizeof their_addr;
@@ -119,8 +134,11 @@ int main() {
         if (!fork()) {     // this is the child process
             close(sockfd); // child doesn't need the listener
             handle_client(new_fd);
+            printf("\nserver: connection with %s closed\n", s);
+            close(new_fd);
             exit(0);
         }
         close(new_fd); // parent doesn't need this
     }
+    dell_catalog(catalog);
 }
