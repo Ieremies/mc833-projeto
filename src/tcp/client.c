@@ -16,16 +16,16 @@
 
 #define MAXDATASIZE 100 // max number of bytes we can get at once
 
-void add() { printf("\nadd running\n"); }
+void adda_movie() { printf("\nadd running\n"); }
 
-void print() { printf("\nprint_filme running\n"); }
+void print() { printf("\nprint_movie running\n"); }
 
 void (*handlers[])() = {add, print};
 
 void print_menu() {
     system("clear");
-    printf("0 - add");
-    printf("\n1 - print_filme");
+    printf("0 - Cadastrar um novo filme");
+    printf("\n1 - print_movie");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
