@@ -1,10 +1,10 @@
-#import "filme.h"
+#include "filme.h"
 
 typedef struct {
     Filme **lista;
     int qtd;
 } Catalogo;
 
-Catalogo *criar_catalogo();
-void adicionar_filme(Catalogo *catalogo, Filme *filme);
-void deletar_catalogo(Catalogo *catalogo);
+Catalogo *cria_catalogo();
+void adiciona_filme(Catalogo *catalogo, Filme *filme);
+void deleta_catalogo(Catalogo *catalogo);

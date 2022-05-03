@@ -1,4 +1,4 @@
-#import "generos.h"
+#include "generos.h"
 
 typedef struct {
     int id;

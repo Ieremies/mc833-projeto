@@ -1,7 +1,6 @@
 #include "filme.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // NÙMERO MÀXIMO SUPORTADO DE ID È 999
 int qtd_filmes = 0;
@@ -26,11 +25,13 @@ void print(Filme *filme) {
            filme->ano);
     // TODO print generos!
 }
+
 void print_titulo_id(Filme *filme) {
     printf("%d %s\n", filme->id, filme->titulo);
 }
+
 void deletar_filme(Filme *filme) {
-    deletar_generos(filme->generos);
+    deleta_generos(filme->generos);
     free(filme->titulo);
     free(filme->diretor);
     free(filme);

@@ -8,4 +8,4 @@ typedef struct {
 
 Genero *criar_generos();
 void adiciona_generos(Genero *lista_generos, char *genero);
-void deletar_generos(Genero *lista_generos);
+void deleta_generos(Genero *lista_generos);
