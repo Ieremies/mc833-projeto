@@ -2,6 +2,7 @@
 ** client.c -- a stream socket client demo
 */
 
+#include "movie.h"
 #include "net_utils.h"
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -16,11 +17,46 @@
 
 #define MAXDATASIZE 100 // max number of bytes we can get at once
 
-void adda_movie() { printf("\nadd running\n"); }
+void post_movie(int socket) {
+    Movie movie;
+    char movie_str[sizeof(Movie)];
 
-void print() { printf("\nprint_movie running\n"); }
+    system("clear");
+    printf("Cadastro de filme");
 
-void (*handlers[])() = {add, print};
+    printf("\nDigite o id do filme: ");
+    scanf("%d", &movie.id);
+    getchar(); // ignores the leading \n
+
+    printf("Digite o titulo do filme: ");
+    fgets(movie.title, MAX_STR_LEN, stdin);
+
+    printf("Digite o numero de generos desse filme: ");
+    scanf("%d", &movie.num_genres);
+    getchar(); // ignores the leading \n
+
+    for (int i = 0; i < movie.num_genres; i++) {
+        printf("Digite o %dº genero desse filme: ", i + 1);
+        fgets(movie.genre_list[i], MAX_STR_LEN, stdin);
+    }
+
+    printf("Digite o nome do diretor desse filme: ");
+    fgets(movie.director_name, MAX_STR_LEN, stdin);
+
+    printf("Digite o ano desse filme: ");
+    scanf("%d", &movie.year);
+    getchar(); // ignores the leading \n
+
+    // Coverts the Movie to a byte stream:
+    memcpy(movie_str, &movie, sizeof(Movie));
+
+    if (send(socket, movie_str, sizeof(Movie), 0) == -1)
+        perror("send");
+}
+
+void print(int socket) { printf("\nprint_movie running\n"); }
+
+void (*handlers[])(int) = {post_movie, print};
 
 void print_menu() {
     system("clear");
@@ -30,7 +66,7 @@ void print_menu() {
     printf("\nDigite um comando: ");
 }
 
-void handle_user() {
+void handle_user(int socket) {
     char cmd;
     print_menu();
     while (scanf(" %c", &cmd) == 1) {
@@ -40,7 +76,7 @@ void handle_user() {
         cmd -= '0'; // converts to number
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void (*)()))
-            handlers[cmd]();
+            handlers[cmd](socket);
         else
             printf("\nInvalid command\n");
         sleep(1);
@@ -98,17 +134,7 @@ int main(int argc, char *argv[]) {
 
     freeaddrinfo(servinfo); // all done with this structure
 
-    handle_user();
-
-    if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
-        perror("recv");
-        exit(1);
-    }
-
-    buf[numbytes] = '\0';
-
-    printf("client: received '%s'\n", buf);
-
+    handle_user(sockfd);
     close(sockfd);
 
     return 0;

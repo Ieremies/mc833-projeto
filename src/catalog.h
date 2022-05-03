@@ -8,5 +8,5 @@ typedef struct {
 } Catalog;
 
 Catalog *create_catalog();
-void add_movie(Catalog *catalog, Movie *movie);
+void add_movie(Catalog *catalog, Movie movie);
 void dell_catalog(Catalog *catalog);

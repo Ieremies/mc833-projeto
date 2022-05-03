@@ -2,6 +2,7 @@
 ** server.c -- a stream socket server demo
 */
 
+#include "movie.h"
 #include "net_utils.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -28,10 +29,15 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
-void handle_client(int new_fd) {
-    if (send(new_fd, "Hello, world!", 13, 0) == -1)
-        perror("send");
-    close(new_fd);
+void handle_client(int socket) {
+    Movie movie;
+    char movie_str[sizeof(Movie)];
+
+    if (recv(socket, movie_str, sizeof(Movie), 0) == -1)
+        perror("recv");
+    // Coverts a byte stream to a Movie:
+    memcpy(&movie, movie_str, sizeof(Movie));
+    close(socket);
 }
 
 int main() {
