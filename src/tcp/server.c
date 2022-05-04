@@ -3,6 +3,7 @@
 */
 
 #include "catalog.h"
+#include "movie.h"
 #include "net_utils.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -34,9 +35,32 @@ void sigchld_handler(int s) {
 
 void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
 
-void put_movie(Movie movie) {}
+void put_movie(Movie movie) {
+    int i, found = 0;
+    for (i = 0; i < CATALOG.size; i++)
+        if (movie.id == CATALOG.movie_list[i].id) {
+            found = 1;
+            break;
+        }
+    if (!found) {
+        printf("\nMovie with id %d does not exist\n", movie.id);
+        return;
+    }
 
-void (*handlers[])(Movie) = {post_movie, put_movie};
+    // Update the movie with the new values:
+    if (movie.title[0] != '\0')
+        memcpy(CATALOG.movie_list[i].title, movie.title, MAX_STR_LEN);
+    if (movie.num_genres > 0)
+        for (int j = 0; j < movie.num_genres; j++)
+            add_genre(&CATALOG.movie_list[i], movie.genre_list[j]);
+    if (movie.director_name[0] != '\0')
+        memcpy(CATALOG.movie_list[i].director_name, movie.director_name,
+               MAX_STR_LEN);
+    if (movie.year != 0)
+        CATALOG.movie_list[i].year = movie.year;
+}
+
+void (*handlers[])(Movie) = {post_movie, post_movie, put_movie, post_movie};
 
 void handle_client(int socket) {
     Payload payload;

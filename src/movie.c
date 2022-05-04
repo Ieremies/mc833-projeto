@@ -1,5 +1,4 @@
 #include "movie.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,12 +13,6 @@ Movie *create_movie(int id, char *title, char *genre, char *director,
     return new;
 }
 
-void print_movie(Movie *movie) {
-    printf("%d %s %s %d\n", movie->id, movie->title, movie->director_name,
-           movie->year);
-    // TODO print genre_list!
-}
-
-void print_title_id(Movie *movie) {
-    printf("%d %s\n", movie->id, movie->title);
+void add_genre(Movie *movie, char *genre) {
+    memcpy(movie->genre_list[movie->num_genres++], genre, MAX_STR_LEN);
 }

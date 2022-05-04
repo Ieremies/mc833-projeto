@@ -31,12 +31,12 @@ Payload post_movie() {
     printf("Digite o titulo do filme: ");
     fgets(ret.movie.title, MAX_STR_LEN, stdin);
 
-    printf("Digite o numero de generos desse filme: ");
+    printf("Digite o número de generos desse filme: ");
     scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
     for (int i = 0; i < ret.movie.num_genres; i++) {
-        printf("Digite o %dº genero desse filme: ", i + 1);
+        printf("Digite o %dº gênero desse filme: ", i + 1);
         fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
     }
 
@@ -52,7 +52,23 @@ Payload post_movie() {
 
 Payload put_genre() {
     Payload ret;
+    memset(&ret, 0, sizeof(Payload));
     ret.op = PUT;
+
+    system("clear");
+    printf("Adição de gênero em filme");
+
+    printf("\nDigite o id do filme: ");
+    scanf("%d", &ret.movie.id);
+
+    printf("Digite o número de generos que deseja adicionar a esse filme: ");
+    scanf("%d", &ret.movie.num_genres);
+    getchar(); // ignores the leading \n
+
+    for (int i = 0; i < ret.movie.num_genres; i++) {
+        printf("Digite o %dº novo gênero desse filme: ", i + 1);
+        fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
+    }
 
     return ret;
 }
