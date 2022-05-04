@@ -20,6 +20,9 @@
 
 #define BACKLOG 10 // how many pending connections queue will hold
 
+int SOCKFD;      // global to be closed on exit
+Catalog CATALOG; // global to all handlers task
+
 void sigchld_handler(int s) {
     (void)s; // quiet unused variable warning
 
@@ -29,7 +32,7 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
-void post_movie(Movie movie) {}
+void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
 
 void put_movie(Movie movie) {}
 
@@ -50,12 +53,23 @@ void handle_client(int socket) {
             printf("\nInvalid operation\n");
             continue;
         }
+#pragma omp critical
         handlers[payload.op](payload.movie); // execute the action
     }
 }
 
+void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+    close(SOCKFD);
+    system("clear");
+    printf("server: exiting...\n");
+    sleep(1);
+    exit(0);
+}
+
 int main() {
-    int sockfd, new_fd, code; // listen on sock_fd, new connection on new_fd
+    system("clear");
+    CATALOG.size = 0;
+    int new_fd, code; // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
     struct sockaddr_storage their_addr; // connector's address information
     socklen_t sin_size;
@@ -76,20 +90,20 @@ int main() {
 
     // Loop through all the results and bind to the first we can:
     for (p = servinfo; p != NULL; p = p->ai_next) {
-        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (sockfd == -1) {
+        SOCKFD = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if (SOCKFD == -1) {
             perror("server: socket");
             continue;
         }
 
-        code = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+        code = setsockopt(SOCKFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
         if (code == -1) {
             perror("setsockopt");
             exit(1);
         }
 
-        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sockfd);
+        if (bind(SOCKFD, p->ai_addr, p->ai_addrlen) == -1) {
+            close(SOCKFD);
             perror("server: bind");
             continue;
         }
@@ -104,7 +118,7 @@ int main() {
         exit(1);
     }
 
-    if (listen(sockfd, BACKLOG) == -1) {
+    if (listen(SOCKFD, BACKLOG) == -1) {
         perror("listen");
         exit(1);
     }
@@ -117,11 +131,15 @@ int main() {
         exit(1);
     }
 
-    Catalog *catalog = create_catalog();
+    // Make sure the socket will be cleaned:
+    signal(SIGINT, sigint_handler);
+
     printf("server: waiting for connections...\n");
+#pragma omp parallel default(none)
+#pragma omp single nowait
     while (1) { // main accept() loop
         sin_size = sizeof their_addr;
-        new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
+        new_fd = accept(SOCKFD, (struct sockaddr *)&their_addr, &sin_size);
         if (new_fd == -1) {
             perror("accept");
             continue;
@@ -131,14 +149,11 @@ int main() {
                   get_in_addr((struct sockaddr *)&their_addr), s, sizeof s);
         printf("server: got connection from %s\n", s);
 
-        if (!fork()) {     // this is the child process
-            close(sockfd); // child doesn't need the listener
+#pragma omp task firstprivate(new_fd) // this is the child task
+        {
             handle_client(new_fd);
-            printf("\nserver: connection with %s closed\n", s);
             close(new_fd);
-            exit(0);
         }
-        close(new_fd); // parent doesn't need this
     }
-    dell_catalog(catalog);
+    return 0;
 }

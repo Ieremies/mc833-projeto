@@ -1,4 +1,7 @@
-#include "net_utils.h"
+#ifndef MC833_PROJETO_MOVIE_H
+#define MC833_PROJETO_MOVIE_H
+
+#include "utils.h"
 
 #define MAX_MOVIE_GENRES 10
 
@@ -16,3 +19,5 @@ Movie *create_movie(int id, char *title, char *genre, char *director, int year);
 void add_genre(Movie *movie, char *genre);
 void print_movie(Movie *movie);
 void print_title_id(Movie *movie);
+
+#endif // MC833_PROJETO_MOVIE_H

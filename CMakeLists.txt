@@ -12,6 +12,7 @@ add_executable(server
         src/movie.c
         src/movie.h
         src/tcp/server.c
+        src/utils.h
         src/net_utils.c
         src/net_utils.h)
 
@@ -21,5 +22,6 @@ add_executable(client
         src/movie.c
         src/movie.h
         src/tcp/client.c
+        src/utils.h
         src/net_utils.c
         src/net_utils.h)

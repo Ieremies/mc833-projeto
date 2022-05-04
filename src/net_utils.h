@@ -5,8 +5,6 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#define MAX_STR_LEN 200
-
 typedef enum { POST, GET, PUT, EXIT } Operation;
 
 typedef struct {

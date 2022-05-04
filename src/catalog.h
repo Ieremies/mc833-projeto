@@ -1,3 +1,6 @@
+#ifndef MC833_PROJETO_CATALOG_H
+#define MC833_PROJETO_CATALOG_H
+
 #include "movie.h"
 
 #define MAX_MOVIES 256
@@ -7,6 +10,6 @@ typedef struct {
     int size;
 } Catalog;
 
-Catalog *create_catalog();
 void add_movie(Catalog *catalog, Movie movie);
-void dell_catalog(Catalog *catalog);
+
+#endif // MC833_PROJETO_CATALOG_H

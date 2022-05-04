@@ -2,11 +2,11 @@
 ** client.c -- a stream socket client demo
 */
 
-#include "movie.h"
 #include "net_utils.h"
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +14,8 @@
 #include <unistd.h>
 
 #define PORT "3490" // the port client will be connecting to
+
+int SOCKFD;
 
 Payload post_movie() {
     Payload ret;
@@ -65,7 +67,17 @@ void print_menu() {
     printf("\nDigite um comando: ");
 }
 
-void handle_user(int socket) {
+void send_exit() {
+    Payload payload;
+    payload.op = EXIT;
+    char payload_str[sizeof(Payload)];
+    // Coverts the Payload to a byte stream:
+    memcpy(payload_str, &payload, sizeof(Payload));
+    if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
+        perror("send");
+}
+
+void handle_user() {
     char cmd, payload_str[sizeof(Payload)];
     print_menu();
     while (scanf(" %c", &cmd) == 1) {
@@ -75,11 +87,11 @@ void handle_user(int socket) {
         cmd -= '0'; // converts to number
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
-            Payload payload = handlers[cmd](socket);
+            Payload payload = handlers[cmd]();
 
             // Coverts the Payload to a byte stream:
             memcpy(payload_str, &payload, sizeof(Payload));
-            if (send(socket, payload_str, sizeof(Payload), 0) == -1)
+            if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
                 perror("send");
         } else
             printf("\nInvalid command\n");
@@ -87,16 +99,19 @@ void handle_user(int socket) {
         print_menu();
     }
 
-    Payload payload;
-    payload.op = EXIT;
-    // Coverts the Payload to a byte stream:
-    memcpy(payload_str, &payload, sizeof(Payload));
-    if (send(socket, payload_str, sizeof(Payload), 0) == -1)
-        perror("send");
+    send_exit();
+}
+
+void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+    system("clear");
+    printf("client: exiting...\n");
+    send_exit();
+    close(SOCKFD);
+    sleep(1);
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {
-    int sockfd;
     struct addrinfo hints, *servinfo, *p;
     int rv;
     char s[INET6_ADDRSTRLEN];
@@ -105,6 +120,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "usage: client hostname\n");
         exit(1);
     }
+
+    // Make sure the socket will be cleaned and the user will send an EXIT:
+    signal(SIGINT, sigint_handler);
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
@@ -117,15 +135,15 @@ int main(int argc, char *argv[]) {
 
     // Loop through all the results and connect to the first we can:
     for (p = servinfo; p != NULL; p = p->ai_next) {
-        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (sockfd == -1) {
+        SOCKFD = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if (SOCKFD == -1) {
             perror("client: socket");
             continue;
         }
 
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+        if (connect(SOCKFD, p->ai_addr, p->ai_addrlen) == -1) {
             perror("client: connect");
-            close(sockfd);
+            close(SOCKFD);
             continue;
         }
 
@@ -144,8 +162,8 @@ int main(int argc, char *argv[]) {
 
     freeaddrinfo(servinfo); // all done with this structure
 
-    handle_user(sockfd);
-    close(sockfd);
+    handle_user();
+    close(SOCKFD);
 
     return 0;
 }
