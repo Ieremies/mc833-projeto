@@ -135,10 +135,10 @@ int main() {
     signal(SIGINT, sigint_handler);
 
     printf("server: waiting for connections...\n");
-#pragma omp parallel default(none)
+#pragma omp parallel
 #pragma omp single nowait
     while (1) { // main accept() loop
-        sin_size = sizeof their_addr;
+        sin_size = sizeof(their_addr);
         new_fd = accept(SOCKFD, (struct sockaddr *)&their_addr, &sin_size);
         if (new_fd == -1) {
             perror("accept");

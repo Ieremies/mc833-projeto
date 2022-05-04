@@ -4,6 +4,8 @@ project(mc833_projeto C)
 
 set(CMAKE_C_STANDARD 11)
 
+find_package(OpenMP REQUIRED)
+
 include_directories(src)
 
 add_executable(server
@@ -15,6 +17,7 @@ add_executable(server
         src/utils.h
         src/net_utils.c
         src/net_utils.h)
+target_link_libraries(server PUBLIC OpenMP::OpenMP_C)
 
 add_executable(client
         src/catalog.c
