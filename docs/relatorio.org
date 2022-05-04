@@ -1,0 +1,27 @@
+#+Title: MC833 - Relatório do Projeto 1
+#+Author: Ieremies Romero, Marcão
+
+* Introdução
+Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP de =GET= ou =PUT=.
+* Descrição
+
+
+* Casos de uso
+Nosso servidor serve para fornecer uma lista de filme e suas informações.
+* Armazenamento e estruturas de dados
+As informações armazenadas estão contidas no arquivo =data/movie.h= que contém a =struct Movie= composta dos seguintes campos:
+- id :: Um identificador numérico único.
+- title :: Uma string contendo o título do filme.
+- num_genres :: A quantidade de gêneros cadastrados ao filme.
+- genre_list :: Os gêneros cadastrados ao filme.
+- director_name :: Uma string contendo o nome do diretor.
+- year :: O ano de publicação do filme.
+
+  Para armazenar uma lista de filmes, possuímos a =struct Catalog= definida no arquivo =data/Catalog.h= que se resume a um vetor de =struct Movie= e o indicador de quantos filmes a lista contém (=size=).
+* Implementação
+** Servidor
+No lado do servidor, começamos populando a =struct addrinf= com algumas informações e passando-a para a função =getaddrinfo()= que nos retorna uma lista ligada de IP's disponíveis. Como indicado ref:tutorial, iteramos pelas possibilidades recuperando o socket descriptor, conferimos se está totalmente livre para ser utilizado com =setsockopt= e nos conectamos ao primeiro disponível com =bind()=.
+
+Caso tudo isso tenha sido feito com êxito, podemos garantir que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço =while=, aceitamos novas conexões com =accept()= e executamos =handle_client()=, função responsável por agir em vista das requisições do cliente.
+** Cliente
+* Conclusão
