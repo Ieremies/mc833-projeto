@@ -42,8 +42,8 @@ void put_movie(Movie movie) {
             found = 1;
             break;
         }
-    if (!found) {
-        printf("\nMovie with id %d does not exist\n", movie.id);
+    if (!found) { // insert the new movie
+        add_movie(&CATALOG, movie);
         return;
     }
 
@@ -102,7 +102,7 @@ int main() {
     char s[INET6_ADDRSTRLEN];
     int rv;
 
-    memset(&hints, 0, sizeof hints);
+    memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE; // use my IP
@@ -179,5 +179,4 @@ int main() {
             close(new_fd);
         }
     }
-    return 0;
 }

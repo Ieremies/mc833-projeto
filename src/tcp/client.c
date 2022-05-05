@@ -28,22 +28,22 @@ Payload post_movie() {
     scanf("%d", &ret.movie.id);
     getchar(); // ignores the leading \n
 
-    printf("Digite o titulo do filme: ");
+    printf("Digite o título do filme: ");
     fgets(ret.movie.title, MAX_STR_LEN, stdin);
 
-    printf("Digite o número de generos desse filme: ");
+    printf("Digite o número de gêneros do filme: ");
     scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
     for (int i = 0; i < ret.movie.num_genres; i++) {
-        printf("Digite o %dº gênero desse filme: ", i + 1);
+        printf("Digite o %dº gênero do filme: ", i + 1);
         fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
     }
 
-    printf("Digite o nome do diretor desse filme: ");
+    printf("Digite o nome do diretor do filme: ");
     fgets(ret.movie.director_name, MAX_STR_LEN, stdin);
 
-    printf("Digite o ano desse filme: ");
+    printf("Digite o ano do filme: ");
     scanf("%d", &ret.movie.year);
     getchar(); // ignores the leading \n
 
@@ -61,7 +61,7 @@ Payload put_genre() {
     printf("\nDigite o id do filme: ");
     scanf("%d", &ret.movie.id);
 
-    printf("Digite o número de generos que deseja adicionar a esse filme: ");
+    printf("Digite o número de gêneros que deseja adicionar a esse filme: ");
     scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
@@ -137,9 +137,6 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // Make sure the socket will be cleaned and the user will send an EXIT:
-    signal(SIGINT, sigint_handler);
-
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -177,6 +174,9 @@ int main(int argc, char *argv[]) {
     sleep(1);
 
     freeaddrinfo(servinfo); // all done with this structure
+
+    // Make sure the socket will be cleaned and the user will send an EXIT:
+    signal(SIGINT, sigint_handler);
 
     handle_user();
     close(SOCKFD);
