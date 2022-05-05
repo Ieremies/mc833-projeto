@@ -3,7 +3,7 @@
 
 #include "movie.h"
 
-#define MAX_MOVIES 256
+#define MAX_MOVIES 50
 
 typedef struct {
     Movie movie_list[MAX_MOVIES];

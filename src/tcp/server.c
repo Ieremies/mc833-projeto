@@ -33,9 +33,9 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
-void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
+void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
 
-void put_movie(Movie movie) {
+void put_movie(Movie movie, int socket) {
     int i, found = 0;
     for (i = 0; i < CATALOG.size; i++)
         if (movie.id == CATALOG.movie_list[i].id) {
@@ -60,7 +60,41 @@ void put_movie(Movie movie) {
         CATALOG.movie_list[i].year = movie.year;
 }
 
-void (*handlers[])(Movie) = {post_movie, post_movie, put_movie, post_movie};
+Response get_movie(int id) {
+    Response response;
+    memset(&response, 0, sizeof(Payload));
+
+    // Return all catalog:
+    if (id == ALL) {
+        response.data.catalog = CATALOG;
+        return response;
+    }
+
+    // Return a specific movie:
+    int i, found = 0;
+    for (i = 0; i < CATALOG.size; i++)
+        if (id == CATALOG.movie_list[i].id) {
+            found = 1;
+            break;
+        }
+    if (!found) {
+        printf("\nMovie with id %d does not exist\n", id);
+        return response;
+    }
+    response.data.movie = CATALOG.movie_list[i];
+    return response;
+}
+
+void get_handler(Movie movie, int socket) {
+    Response response = get_movie(movie.id);
+    char response_str[sizeof(Response)];
+    memcpy(response_str, &response, sizeof(Response));
+    if (send(socket, response_str, sizeof(Response), 0) == -1)
+        perror("send");
+}
+
+void (*handlers[])(Movie, int) = {post_movie, get_handler, put_movie,
+                                  post_movie};
 
 void handle_client(int socket) {
     Payload payload;
@@ -78,7 +112,7 @@ void handle_client(int socket) {
             continue;
         }
 #pragma omp critical
-        handlers[payload.op](payload.movie); // execute the action
+        handlers[payload.op](payload.movie, socket); // execute the action
     }
 }
 
