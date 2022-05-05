@@ -111,7 +111,7 @@ void handle_client(int socket) {
             printf("\nInvalid operation\n");
             continue;
         }
-#pragma omp critical
+#pragma omp critical(Catalog)
         handlers[payload.op](payload.movie, socket); // execute the action
     }
 }
@@ -124,7 +124,36 @@ void sigint_handler(int sig_num) { // Signal Handler for SIGINT
     exit(0);
 }
 
-int main() {
+void backup() {
+    FILE *f = fopen("catalog_database.data", "wb");
+    if (f == NULL) {
+        printf("\nError opening database file\n");
+        return;
+    }
+
+    char catalog_str[sizeof(Catalog)];
+    // Coverts the Catalog to a byte stream:
+#pragma omp critical(Catalog)
+    memcpy(catalog_str, &CATALOG, sizeof(Catalog));
+    fwrite(catalog_str, sizeof(Catalog), 1, f);
+    fclose(f);
+}
+
+void load_backup() {
+    FILE *f = fopen("catalog_database.data", "rb");
+    if (f == NULL) {
+        printf("\nError opening database file\n");
+        return;
+    }
+
+    char catalog_str[sizeof(Catalog)];
+    fread(catalog_str, sizeof(Catalog), 1, f);
+    // Coverts a byte stream to a Catalog object:
+    memcpy(&CATALOG, catalog_str, sizeof(Catalog));
+    fclose(f);
+}
+
+int main(int argc, char *argv[]) {
     system("clear");
     CATALOG.size = 0;
     int new_fd, code; // listen on sock_fd, new connection on new_fd
@@ -135,6 +164,9 @@ int main() {
     int yes = 1;
     char s[INET6_ADDRSTRLEN];
     int rv;
+
+    if (argc == 2 && strcmp(argv[1], "load") == 0)
+        load_backup();
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
@@ -211,6 +243,8 @@ int main() {
         {
             handle_client(new_fd);
             close(new_fd);
+#pragma omp critical(Backup)
+            backup();
         }
     }
 }
