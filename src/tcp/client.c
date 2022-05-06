@@ -84,7 +84,7 @@ Payload get_movies() {
 void list_titles(Response response) {
     system("clear");
     printf("Lista de filmes:\n");
-    printf(" -> id  - nome\n");
+    printf(" -> id  - título\n");
     for (int i = 0; i < response.data.catalog.size; i++)
         printf(" -> %d - %s", response.data.catalog.movie_list[i].id,
                response.data.catalog.movie_list[i].title);
@@ -93,14 +93,35 @@ void list_titles(Response response) {
     getchar();
 }
 
-Payload (*handlers[])() = {post_movie, put_genre, get_movies};
-void (*get_handlers[])(Response) = {NULL, NULL, list_titles};
+void list_info_by_genre(Response response) {
+    char genre[MAX_STR_LEN];
+    system("clear");
+    getchar(); // ignores the leading \n
+    printf("Digite o gênero: ");
+    fgets(genre, MAX_STR_LEN, stdin);
+
+    printf("\nLista de filmes:\n");
+    printf(" -> título - nome do diretor - ano\n");
+    Movie aux;
+    for (int i = 0; i < response.data.catalog.size; i++) {
+        aux = response.data.catalog.movie_list[i];
+        if (contains_genre(&aux, genre))
+            printf(" -> %s - %s - %d", aux.title, aux.director_name, aux.year);
+    }
+    printf("Aperte enter para continuar...");
+    getchar();
+}
+
+Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
+void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
+                                    list_info_by_genre};
 
 void print_menu() {
     system("clear");
     printf("0 - Cadastrar um novo filme");
     printf("\n1 - Acrescentar um novo gênero em um filme");
     printf("\n2 - Listar títulos");
+    printf("\n3 - Listar informações por gênero");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
@@ -120,7 +141,7 @@ void handle_get(char cmd) {
     char response_str[sizeof(Response)];
     if (recv(SOCKFD, response_str, sizeof(Response), 0) == -1)
         perror("recv");
-    // Coverts a byte stream to a Payload object:
+    // Coverts a byte stream to a Response object:
     memcpy(&response, response_str, sizeof(Response));
     get_handlers[cmd](response);
 }

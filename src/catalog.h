@@ -6,8 +6,8 @@
 #define MAX_MOVIES 50
 
 typedef struct {
+    char size;
     Movie movie_list[MAX_MOVIES];
-    int size;
 } Catalog;
 
 void add_movie(Catalog *catalog, Movie movie);

@@ -116,14 +116,6 @@ void handle_client(int socket) {
     }
 }
 
-void sigint_handler(int sig_num) { // Signal Handler for SIGINT
-    close(SOCKFD);
-    system("clear");
-    printf("server: exiting...\n");
-    sleep(1);
-    exit(0);
-}
-
 void backup() {
     FILE *f = fopen("catalog_database.data", "wb");
     if (f == NULL) {
@@ -137,6 +129,15 @@ void backup() {
     memcpy(catalog_str, &CATALOG, sizeof(Catalog));
     fwrite(catalog_str, sizeof(Catalog), 1, f);
     fclose(f);
+}
+
+void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+    close(SOCKFD);
+    system("clear");
+    printf("server: exiting...\n");
+    backup();
+    sleep(1);
+    exit(0);
 }
 
 void load_backup() {

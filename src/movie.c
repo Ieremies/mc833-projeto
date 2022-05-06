@@ -16,3 +16,10 @@ Movie *create_movie(int id, char *title, char *genre, char *director,
 void add_genre(Movie *movie, char *genre) {
     memcpy(movie->genre_list[movie->num_genres++], genre, MAX_STR_LEN);
 }
+
+char contains_genre(Movie *movie, char *genre) {
+    for (int i = 0; i < movie->num_genres; i++)
+        if (strstr(movie->genre_list[i], genre))
+            return 1;
+    return 0;
+}

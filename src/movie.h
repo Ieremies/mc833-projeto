@@ -17,5 +17,6 @@ typedef struct {
 
 Movie *create_movie(int id, char *title, char *genre, char *director, int year);
 void add_genre(Movie *movie, char *genre);
+char contains_genre(Movie *movie, char *genre);
 
 #endif // MC833_PROJETO_MOVIE_H
