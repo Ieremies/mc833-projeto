@@ -9,22 +9,22 @@ find_package(OpenMP REQUIRED)
 include_directories(src)
 
 add_executable(server
-        src/catalog.c
-        src/catalog.h
-        src/movie.c
-        src/movie.h
+        src/data/catalog.c
+        src/data/catalog.h
+        src/data/movie.c
+        src/data/movie.h
         src/tcp/server.c
-        src/utils.h
-        src/net_utils.c
-        src/net_utils.h)
+        src/utils/utils.h
+        src/utils/net_utils.c
+        src/utils/net_utils.h)
 target_link_libraries(server PUBLIC OpenMP::OpenMP_C)
 
 add_executable(client
-        src/catalog.c
-        src/catalog.h
-        src/movie.c
-        src/movie.h
+        src/data/catalog.c
+        src/data/catalog.h
+        src/data/movie.c
+        src/data/movie.h
         src/tcp/client.c
-        src/utils.h
-        src/net_utils.c
-        src/net_utils.h)
+        src/utils/utils.h
+        src/utils/net_utils.c
+        src/utils/net_utils.h)
