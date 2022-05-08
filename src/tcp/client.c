@@ -17,13 +17,21 @@
 
 int SOCKFD;
 
+/**===========================================================================*/
+/**
+ * @brief Cadastrar um novo filme.
+ * @details O identificador numérico será definido pelo sistema
+ * @return Struct Payload com as informações a serem colocadas.
+ */
 Payload post_movie() {
     Payload ret;
+    memset(&ret, 0, sizeof(Payload));
     ret.op = POST;
 
     system("clear");
     printf("Cadastro de filme");
 
+    // FIXME Ele disse que o id é para ser determinado pela inserção.
     printf("\nDigite o id do filme: ");
     scanf("%d", &ret.movie.id);
     getchar(); // ignores the leading \n
@@ -50,6 +58,11 @@ Payload post_movie() {
     return ret;
 }
 
+/**
+ * @brief Acrescentar um novo gênero a um filme
+ * @details
+ * @return Struct Payload com as informações a serem colocadas.
+ */
 Payload put_genre() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
@@ -61,6 +74,7 @@ Payload put_genre() {
     printf("\nDigite o id do filme: ");
     scanf("%d", &ret.movie.id);
 
+    // BUG Não precisa ser mais de um, caso dê problema sugiro simplificarmos.
     printf("Digite o número de gêneros que deseja adicionar a esse filme: ");
     scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
@@ -73,11 +87,30 @@ Payload put_genre() {
     return ret;
 }
 
+/**
+ * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
+ * @details
+ * @return Struct Payload com as informações a serem colocadas
+ */
 Payload get_movies() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
     ret.op = GET;
     ret.movie.id = ALL;
+    return ret;
+}
+
+Payload get_movie_by_id() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = GET;
+
+    system("clear");
+    printf("Informações sobre um filme");
+
+    printf("\nDigite o id do filme: ");
+    scanf("%d", &ret.movie.id);
+
     return ret;
 }
 
@@ -93,6 +126,13 @@ Payload remove_movie() {
     scanf("%d", &ret.movie.id);
 
     return ret;
+}
+/**===========================================================================*/
+/**
+ * @brief Imprimir os filmes obtidos.
+ * @details Imprime no formato "-> ID - TÌTULO\n".
+ * @param[in] response Resposta com o catálogo a ser impresso.
+ */
 void list_titles(Response response) {
     system("clear");
     printf("Lista de filmes:\n");
@@ -105,6 +145,39 @@ void list_titles(Response response) {
     getchar();
 }
 
+void print_all_info(Movie movie) {
+    printf(" -> %d - (%d) %s by %s |", movie.id, movie.year, movie.title,
+           movie.director_name);
+    for (int i = 0; i < movie.num_genres; i++)
+        printf(" %s", movie.genre_list[i]);
+    printf("\n");
+}
+
+void list_all_info(Response response) {
+    system("clear");
+    printf("Informação do filme:\n");
+    printf(" -> id  -  (ano) título by diretor | Gêneros\n");
+    // TODO quando for apenas um filme, a resposta virá no campo movie?
+    // se for esse o caso tem que mudar para
+    // printf_all_info(response.data.movie);
+    for (int i = 0; i < response.data.catalog.size; i++)
+        print_all_info(response.data.catalog.movie_list[i]);
+    printf("Aperte enter para continuar...");
+    getchar();
+    getchar();
+}
+
+void list_all_films_all_info(Response response) {
+    system("clear");
+    printf("Lista de filmes:\n");
+    printf(" -> id  -  (ano) título by diretor | Gêneros\n");
+    for (int i = 0; i < response.data.catalog.size; i++)
+        print_all_info(response.data.catalog.movie_list[i]);
+    printf("Aperte enter para continuar...");
+    getchar();
+    getchar();
+}
+
 void list_info_by_genre(Response response) {
     char genre[MAX_STR_LEN];
     system("clear");
@@ -112,6 +185,8 @@ void list_info_by_genre(Response response) {
     printf("Digite o gênero: ");
     fgets(genre, MAX_STR_LEN, stdin);
 
+    // REVIEW Do jeito que ele colocou na descrição, parecia que ele queria
+    // que essa filtragem fosse feita pelo servidor.
     printf("\nLista de filmes:\n");
     printf(" -> título - nome do diretor - ano\n");
     Movie aux;
@@ -123,7 +198,7 @@ void list_info_by_genre(Response response) {
     printf("Aperte enter para continuar...");
     getchar();
 }
-
+/**===========================================================================*/
 Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
 void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
                                     list_info_by_genre};
