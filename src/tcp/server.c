@@ -60,31 +60,23 @@ void put_movie(Movie movie, int socket) {
         CATALOG.movie_list[i].year = movie.year;
 }
 
-Response get_movie(int id) {
+/**
+ * @brief Função responsável por recuperar informações.
+ * @details Retorna todo o catálogo e é responsabilidade do client filtrar.
+ * @return Struct Resposne com todo o catálogo.
+ */
+Response get_movie() {
     Response response;
     memset(&response, 0, sizeof(Payload));
 
-    // Return all catalog:
-    if (id == ALL) {
-        response.data.catalog = CATALOG;
-        return response;
-    }
-
-    // Return a specific movie:
-    int i, found = 0;
-    for (i = 0; i < CATALOG.size; i++)
-        if (id == CATALOG.movie_list[i].id) {
-            found = 1;
-            break;
-        }
-    if (!found) {
-        printf("\nMovie with id %d does not exist\n", id);
-        return response;
-    }
-    response.data.movie = CATALOG.movie_list[i];
+    // HACK Return all catalog:
+    response.data.catalog = CATALOG;
     return response;
 }
-
+/**
+ * @}
+ */
+/**===========================================================================*/
 void get_handler(Movie movie, int socket) {
     Response response = get_movie(movie.id);
     char response_str[sizeof(Response)];
