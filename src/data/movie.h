@@ -1,7 +1,7 @@
 #ifndef MC833_PROJETO_MOVIE_H
 #define MC833_PROJETO_MOVIE_H
 
-#include "utils.h"
+#include "../utils/utils.h"
 
 #define MAX_MOVIE_GENRES 10
 

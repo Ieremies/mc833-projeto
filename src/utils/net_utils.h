@@ -1,7 +1,8 @@
 #ifndef MC833_PROJETO_NET_UTILS_H
 #define MC833_PROJETO_NET_UTILS_H
 
-#include "catalog.h"
+#include "../data/catalog.h"
+#include "../data/movie.h"
 #include <netinet/in.h>
 #include <sys/socket.h>
 
