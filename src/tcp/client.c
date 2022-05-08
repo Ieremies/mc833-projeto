@@ -30,6 +30,7 @@ Payload post_movie() {
 
     printf("Digite o título do filme: ");
     fgets(ret.movie.title, MAX_STR_LEN, stdin);
+    ret.movie.title[strcspn(ret.movie.title, "\n")] = '\0';
 
     printf("Digite o número de gêneros do filme: ");
     scanf("%d", &ret.movie.num_genres);
@@ -38,10 +39,12 @@ Payload post_movie() {
     for (int i = 0; i < ret.movie.num_genres; i++) {
         printf("Digite o %dº gênero do filme: ", i + 1);
         fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
+        ret.movie.genre_list[i][strcspn(ret.movie.genre_list[i], "\n")] = '\0';
     }
 
     printf("Digite o nome do diretor do filme: ");
     fgets(ret.movie.director_name, MAX_STR_LEN, stdin);
+    ret.movie.director_name[strcspn(ret.movie.director_name, "\n")] = '\0';
 
     printf("Digite o ano do filme: ");
     scanf("%d", &ret.movie.year);
@@ -68,6 +71,7 @@ Payload put_genre() {
     for (int i = 0; i < ret.movie.num_genres; i++) {
         printf("Digite o %dº novo gênero desse filme: ", i + 1);
         fgets(ret.movie.genre_list[i], MAX_STR_LEN, stdin);
+        ret.movie.genre_list[i][strcspn(ret.movie.genre_list[i], "\n")] = '\0';
     }
 
     return ret;
@@ -99,6 +103,7 @@ void list_info_by_genre(Response response) {
     getchar(); // ignores the leading \n
     printf("Digite o gênero: ");
     fgets(genre, MAX_STR_LEN, stdin);
+    genre[strcspn(genre, "\n")] = '\0';
 
     printf("\nLista de filmes:\n");
     printf(" -> título - nome do diretor - ano\n");
