@@ -33,32 +33,30 @@ void sigchld_handler(int s) {
     errno = saved_errno;
 }
 
-void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
+/**===========================================================================*/
+/**
+ * @name Interface com o banco de dados.
+ * Funções responsáveis por interagir com as informações,
+ * alheia de qualquer protocolo de rede.
+ * @{
+ */
 
-void put_movie(Movie movie, int socket) {
-    int i, found = 0;
-    for (i = 0; i < CATALOG.size; i++)
-        if (movie.id == CATALOG.movie_list[i].id) {
-            found = 1;
-            break;
-        }
-    if (!found) { // insert the new movie
-        add_movie(&CATALOG, movie);
-        return;
-    }
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] movie Description
+ * @param[in] socket Description
+ */
+void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
 
-    // Update the movie with the new values:
-    if (movie.title[0] != '\0')
-        memcpy(CATALOG.movie_list[i].title, movie.title, MAX_STR_LEN);
-    if (movie.num_genres > 0)
-        for (int j = 0; j < movie.num_genres; j++)
-            add_genre(&CATALOG.movie_list[i], movie.genre_list[j]);
-    if (movie.director_name[0] != '\0')
-        memcpy(CATALOG.movie_list[i].director_name, movie.director_name,
-               MAX_STR_LEN);
-    if (movie.year != 0)
-        CATALOG.movie_list[i].year = movie.year;
-}
+/**
+ * @brief Função responsável por atualizar as informações de um filme.
+ * @details As informações que vierem preenchidas serão aquelas a serem
+ * atualizadas. O filme será determinado pelo ID, único campo obrigatório.
+ * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
+ * o resto vazio.
+ */
+void put_movie(Movie movie) { update_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por recuperar informações.
