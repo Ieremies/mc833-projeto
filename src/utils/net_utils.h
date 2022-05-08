@@ -8,7 +8,7 @@
 
 #define ALL -1
 
-typedef enum { POST, GET, PUT, EXIT } Operation;
+typedef enum { POST, GET, PUT, DEL, EXIT } Operation;
 
 typedef struct {
     Operation op;

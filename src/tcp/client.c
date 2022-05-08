@@ -81,6 +81,18 @@ Payload get_movies() {
     return ret;
 }
 
+Payload remove_movie() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = DEL;
+
+    system("clear");
+    printf("Remover filme");
+
+    printf("\nDigite o id do filme a ser removido: ");
+    scanf("%d", &ret.movie.id);
+
+    return ret;
 void list_titles(Response response) {
     system("clear");
     printf("Lista de filmes:\n");
