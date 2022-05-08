@@ -47,7 +47,7 @@ void sigchld_handler(int s) {
  * @param[in] movie Description
  * @param[in] socket Description
  */
-void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
+void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por atualizar as informações de um filme.
@@ -56,35 +56,28 @@ void post_movie(Movie movie) { add_movie(&CATALOG, movie); }
  * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
  * o resto vazio.
  */
-void put_movie(Movie movie) { update_movie(&CATALOG, movie); }
+void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por recuperar informações.
  * @details Retorna todo o catálogo e é responsabilidade do client filtrar.
  * @return Struct Resposne com todo o catálogo.
  */
-Response get_movie() {
+void get_movie(Movie movie, int socket) {
     Response response;
-    memset(&response, 0, sizeof(Payload));
-
-    // HACK Return all catalog:
-    response.data.catalog = CATALOG;
-    return response;
-}
-/**
- * @}
- */
-/**===========================================================================*/
-void get_handler(Movie movie, int socket) {
-    Response response = get_movie(movie.id);
     char response_str[sizeof(Response)];
+    memset(&response, 0, sizeof(Payload));
+    response.data.catalog = CATALOG;
     memcpy(response_str, &response, sizeof(Response));
     if (send(socket, response_str, sizeof(Response), 0) == -1)
         perror("send");
 }
+/**
+ * @}
+ */
 
-void (*handlers[])(Movie, int) = {post_movie, get_handler, put_movie,
-                                  post_movie};
+/**===========================================================================*/
+void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, post_movie};
 
 void handle_client(int socket) {
     Payload payload;

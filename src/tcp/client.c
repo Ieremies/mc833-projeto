@@ -17,6 +17,12 @@
 
 int SOCKFD;
 
+void wait_for_enter() {
+    static char aux[MAX_STR_LEN];
+    printf("Aperte enter para continuar...");
+    fgets(aux, MAX_STR_LEN, stdin);
+}
+
 /**===========================================================================*/
 /**
  * @brief Cadastrar um novo filme.
@@ -31,7 +37,6 @@ Payload post_movie() {
     system("clear");
     printf("Cadastro de filme");
 
-    // FIXME Ele disse que o id é para ser determinado pela inserção.
     printf("\nDigite o id do filme: ");
     scanf("%d", &ret.movie.id);
     getchar(); // ignores the leading \n
@@ -131,6 +136,7 @@ Payload remove_movie() {
 
     return ret;
 }
+
 /**===========================================================================*/
 /**
  * @name Funções de impressão
@@ -147,11 +153,9 @@ void list_titles(Response response) {
     printf("Lista de filmes:\n");
     printf(" -> id  - título\n");
     for (int i = 0; i < response.data.catalog.size; i++)
-        printf(" -> %d - %s", response.data.catalog.movie_list[i].id,
+        printf(" -> %d - %s\n", response.data.catalog.movie_list[i].id,
                response.data.catalog.movie_list[i].title);
-    printf("Aperte enter para continuar...");
-    getchar();
-    getchar();
+    wait_for_enter();
 }
 
 /**
@@ -178,9 +182,7 @@ void list_all_info(Response response) {
     printf(" -> id  -  (ano) título by diretor | Gêneros\n");
     for (int i = 0; i < response.data.catalog.size; i++)
         print_all_info(response.data.catalog.movie_list[i]);
-    printf("Aperte enter para continuar...");
-    getchar();
-    getchar();
+    wait_for_enter();
 }
 
 /**
@@ -208,12 +210,12 @@ void list_info_by_genre(Response response) {
             printf(" -> %d - (%d) %s by %s ", aux.id, aux.year, aux.title,
                    aux.director_name);
     }
-    printf("Aperte enter para continuar...");
-    getchar();
+    wait_for_enter();
 }
 /**
  * @}
  */
+
 /**===========================================================================*/
 Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
 void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
@@ -252,7 +254,8 @@ void handle_get(char cmd) {
 void handle_user() {
     char cmd, payload_str[sizeof(Payload)];
     print_menu();
-    while (scanf(" %c", &cmd) == 1) {
+    while (scanf("%c", &cmd) == 1) {
+        getchar(); // ignores the leading \n
         if (cmd == 'e')
             break;
 
