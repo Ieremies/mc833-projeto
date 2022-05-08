@@ -2,7 +2,7 @@
 ** client.c -- a stream socket client demo
 */
 
-#include "net_utils.h"
+#include "../utils/net_utils.h"
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>

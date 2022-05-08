@@ -2,9 +2,9 @@
 ** server.c -- a stream socket server demo
 */
 
-#include "catalog.h"
-#include "movie.h"
-#include "net_utils.h"
+#include "../data/catalog.h"
+#include "../data/movie.h"
+#include "../utils/net_utils.h"
 #include <arpa/inet.h>
 #include <errno.h>
 #include <netdb.h>
@@ -29,7 +29,8 @@ void sigchld_handler(int s) {
 
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
-    while (waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
     errno = saved_errno;
 }
 
@@ -166,11 +167,8 @@ int main(int argc, char *argv[]) {
     char s[INET6_ADDRSTRLEN];
     int rv;
 
-    if (argc == 2 && strcmp(argv[1], "load") == 0)
-        load_backup();
-
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC; // either ipv4 or ipv6
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE; // use my IP
 
@@ -187,8 +185,9 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        code = setsockopt(SOCKFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-        if (code == -1) {
+        // Check if the socket is ALL clear to be used.
+        if (setsockopt(SOCKFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) ==
+            -1) {
             perror("setsockopt");
             exit(1);
         }
@@ -226,6 +225,7 @@ int main(int argc, char *argv[]) {
     signal(SIGINT, sigint_handler);
 
     printf("server: waiting for connections...\n");
+
 #pragma omp parallel
 #pragma omp single nowait
     while (1) { // main accept() loop
