@@ -129,6 +129,11 @@ Payload remove_movie() {
 }
 /**===========================================================================*/
 /**
+ * @name Funções de impressão
+ * Funções auxiliares para imprimir os resultados obtidos.
+ * @{
+ */
+/**
  * @brief Imprimir os filmes obtidos.
  * @details Imprime no formato "-> ID - TÌTULO\n".
  * @param[in] response Resposta com o catálogo a ser impresso.
@@ -145,6 +150,11 @@ void list_titles(Response response) {
     getchar();
 }
 
+/**
+ * @brief Imprime todas as informações de um filme.
+ * @details Fotmato " -> ID - ANO TÌTULO DIRETOR | GÊNEROS".
+ * @param[in] movie Filme cujas informações devemos imprimir.
+ */
 void print_all_info(Movie movie) {
     printf(" -> %d - (%d) %s by %s |", movie.id, movie.year, movie.title,
            movie.director_name);
@@ -153,13 +163,15 @@ void print_all_info(Movie movie) {
     printf("\n");
 }
 
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] response Description
+ */
 void list_all_info(Response response) {
     system("clear");
     printf("Informação do filme:\n");
     printf(" -> id  -  (ano) título by diretor | Gêneros\n");
-    // TODO quando for apenas um filme, a resposta virá no campo movie?
-    // se for esse o caso tem que mudar para
-    // printf_all_info(response.data.movie);
     for (int i = 0; i < response.data.catalog.size; i++)
         print_all_info(response.data.catalog.movie_list[i]);
     printf("Aperte enter para continuar...");
@@ -167,17 +179,12 @@ void list_all_info(Response response) {
     getchar();
 }
 
-void list_all_films_all_info(Response response) {
-    system("clear");
-    printf("Lista de filmes:\n");
-    printf(" -> id  -  (ano) título by diretor | Gêneros\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        print_all_info(response.data.catalog.movie_list[i]);
-    printf("Aperte enter para continuar...");
-    getchar();
-    getchar();
-}
-
+/**
+ * @brief Função para imprimir apenas os filmes de um gênero.
+ * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
+ * aqueles que possuem em sua lista de gêneros, o genero fornecido.
+ * @param[in] response Resposta do servidor com o catálogo.
+ */
 void list_info_by_genre(Response response) {
     char genre[MAX_STR_LEN];
     system("clear");
@@ -193,11 +200,15 @@ void list_info_by_genre(Response response) {
     for (int i = 0; i < response.data.catalog.size; i++) {
         aux = response.data.catalog.movie_list[i];
         if (contains_genre(&aux, genre))
-            printf(" -> %s - %s - %d", aux.title, aux.director_name, aux.year);
+            printf(" -> %d - (%d) %s by %s ", aux.id, aux.year, aux.title,
+                   aux.director_name);
     }
     printf("Aperte enter para continuar...");
     getchar();
 }
+/**
+ * @}
+ */
 /**===========================================================================*/
 Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
 void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
