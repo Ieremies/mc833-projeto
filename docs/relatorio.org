@@ -1,5 +1,6 @@
 #+Title: MC833 - Relatório do Projeto 1
 #+Author: Ieremies Romero, Marcão
+#+options: num:nil toc:nil
 
 * Introdução
 Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP de =GET= ou =PUT=.
