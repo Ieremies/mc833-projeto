@@ -26,3 +26,20 @@ void update_movie(Catalog *catalog, Movie movie) {
             return;
         }
 }
+
+/**
+ * @brief Deleta um movie baseado no seu ID.
+ * @details Para deleção, apenas sobrecrevemo-o.
+ * @param[inout] catalog Catálogo da onde o movie será tirado.
+ * @param[in] movie Movie com o ID do filme a ser removido.
+ */
+void delete_movie(Catalog *catalog, Movie movie) {
+    for (int i = 0; i < catalog->size; i++)
+        if (movie.id == catalog->movie_list[i].id) {
+            // FIXME free movie[i];
+            for (int j = i; j < catalog->size; i++)
+                catalog->movie_list[j] = catalog->movie_list[j + 1];
+            catalog->size--;
+            return;
+        }
+}
