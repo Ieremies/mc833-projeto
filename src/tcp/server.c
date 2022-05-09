@@ -69,12 +69,20 @@ void get_movie(Movie movie, int socket) {
     if (send(socket, &response, sizeof(Response), 0) == -1)
         perror("send");
 }
+
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] movie Description
+ * @param[in] socket Description
+ */
+void del_movie(Movie movie, int socket) { delete_movie(&CATALOG, movie); }
 /**
  * @}
  */
 
 /**===========================================================================*/
-void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, post_movie};
+void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
 
 void handle_client(int socket) {
     Payload payload;

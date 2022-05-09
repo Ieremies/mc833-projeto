@@ -12,5 +12,6 @@ typedef struct {
 
 void add_movie(Catalog *catalog, Movie movie);
 void update_movie(Catalog *catalog, Movie movie);
+void delete_movie(Catalog *catalog, Movie movie);
 
 #endif // MC833_PROJETO_CATALOG_H

@@ -124,6 +124,7 @@ Payload remove_movie() {
 
     printf("\nDigite o id do filme a ser removido: ");
     scanf("%d", &ret.movie.id);
+    getchar(); // ignores the leading \n
 
     return ret;
 }
@@ -232,8 +233,8 @@ void list_info_by_id(Response response) {
  */
 
 /**===========================================================================*/
-Payload (*handlers[])() = {post_movie, put_genre,  get_movies,
-                           get_movies, get_movies, get_movies};
+Payload (*handlers[])() = {post_movie, put_genre,  get_movies,  get_movies,
+                           get_movies, get_movies, remove_movie};
 void (*get_handlers[])(Response) = {NULL,          NULL,
                                     list_titles,   list_info_by_genre,
                                     list_all_info, list_info_by_id};
@@ -246,6 +247,7 @@ void print_menu() {
     printf("\n3 - Listar informações por gênero");
     printf("\n4 - Listar todas as informações de todos os filmes");
     printf("\n5 - Listar todas as informações de um filme");
+    printf("\n6 - Remover filme");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
