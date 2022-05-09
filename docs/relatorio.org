@@ -24,5 +24,13 @@ As informações armazenadas estão contidas no arquivo =data/movie.h= que cont�
 No lado do servidor, começamos populando a =struct addrinf= com algumas informações e passando-a para a função =getaddrinfo()= que nos retorna uma lista ligada de IP's disponíveis. Como indicado ref:tutorial, iteramos pelas possibilidades recuperando o socket descriptor, conferimos se está totalmente livre para ser utilizado com =setsockopt= e nos conectamos ao primeiro disponível com =bind()=.
 
 Caso tudo isso tenha sido feito com êxito, podemos garantir que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço =while=, aceitamos novas conexões com =accept()= e executamos =handle_client()=, função responsável por agir em vista das requisições do cliente.
+
+*** Operações
+O servidor é capaz de servir as seguintes operações:
+- *GET* :: retorna todo o catálogo.
+- *POST* :: coloca um novo filme no catálogo, determinando um ID único para ele. Caso não haja espaço, nada é feito.
+- *PUT* :: baseado no ID de uma struct movie, modificamos as informações do tal filme baseado nas informações preenchidas na struct.
+- *DEL* :: baseado no ID de uma struct movie, removemos o filme com a mesma ID do catálogo.
 ** Cliente
+O cliente comunica-se com o servidor mediante as operações acima listadas. Para as diferentes listagem de filmes e suas informações, fazemos esse filtro do lado do cliente.
 * Conclusão
