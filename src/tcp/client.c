@@ -25,6 +25,11 @@ void wait_for_enter() {
 
 /**===========================================================================*/
 /**
+ * @name Operações do servidor
+ * Funções para montar o payload compatível com as operações do servidor.
+ * @{
+ */
+/**
  * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
  * @details
  * @return Struct Payload com as informações a serem colocadas
@@ -128,7 +133,9 @@ Payload remove_movie() {
 
     return ret;
 }
-
+/**
+ * @}
+ */
 /**===========================================================================*/
 /**
  * @name Funções de impressão

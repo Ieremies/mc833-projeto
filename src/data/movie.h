@@ -5,14 +5,18 @@
 
 #define MAX_MOVIE_GENRES 10
 
+/**
+ * @struct Movie
+ * Struct para armazenar as informações referentes a um filme.
+ */
 typedef struct {
-    int id;
-    char title[MAX_STR_LEN];
-    int num_genres;
-    char genre_list[MAX_MOVIE_GENRES][MAX_STR_LEN];
-    char director_name[MAX_STR_LEN];
-    int year;
-    // imagem capa;
+    int id;                                         /**< Identificador único */
+    char title[MAX_STR_LEN];                        /**< Título do filme */
+    int num_genres;                                 /**< Quantidade de gêneros na sua lista de gêneros */
+    char genre_list[MAX_MOVIE_GENRES][MAX_STR_LEN]; /**< Lista de gêneros do filme */
+    char director_name[MAX_STR_LEN];                /**< Nome do diretor */
+    int year;                                       /**< Ano de publicação */
+    // imagem capa;                                 /**< Description */
 } Movie;
 
 Movie *create_movie(int id, char *title, char *genre, char *director, int year);

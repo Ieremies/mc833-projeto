@@ -80,7 +80,6 @@ void del_movie(Movie movie, int socket) { delete_movie(&CATALOG, movie); }
 /**
  * @}
  */
-
 /**===========================================================================*/
 void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
 
