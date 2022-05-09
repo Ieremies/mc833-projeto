@@ -234,25 +234,19 @@ void print_menu() {
 void send_exit() {
     Payload payload;
     payload.op = EXIT;
-    char payload_str[sizeof(Payload)];
-    // Coverts the Payload to a byte stream:
-    memcpy(payload_str, &payload, sizeof(Payload));
-    if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
+    if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
         perror("send");
 }
 
 void handle_get(char cmd) {
     Response response;
-    char response_str[sizeof(Response)];
-    if (recv(SOCKFD, response_str, sizeof(Response), 0) == -1)
+    if (recv(SOCKFD, &response, sizeof(Response), 0) == -1)
         perror("recv");
-    // Coverts a byte stream to a Response object:
-    memcpy(&response, response_str, sizeof(Response));
     get_handlers[cmd](response);
 }
 
 void handle_user() {
-    char cmd, payload_str[sizeof(Payload)];
+    char cmd;
     print_menu();
     while (scanf("%c", &cmd) == 1) {
         getchar(); // ignores the leading \n
@@ -263,10 +257,7 @@ void handle_user() {
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
             Payload payload = handlers[cmd]();
-
-            // Coverts the Payload to a byte stream:
-            memcpy(payload_str, &payload, sizeof(Payload));
-            if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
+            if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
                 perror("send");
             if (payload.op == GET)
                 handle_get(cmd);

@@ -65,11 +65,9 @@ void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
  */
 void get_movie(Movie movie, int socket) {
     Response response;
-    char response_str[sizeof(Response)];
     memset(&response, 0, sizeof(Payload));
     response.data.catalog = CATALOG;
-    memcpy(response_str, &response, sizeof(Response));
-    if (send(socket, response_str, sizeof(Response), 0) == -1)
+    if (send(socket, &response, sizeof(Response), 0) == -1)
         perror("send");
 }
 /**
@@ -81,13 +79,10 @@ void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, post_movie};
 
 void handle_client(int socket) {
     Payload payload;
-    char payload_str[sizeof(Payload)];
     while (1) {
-        if (recv(socket, payload_str, sizeof(Payload), 0) == -1)
+        if (recv(socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
 
-        // Coverts a byte stream to a Payload object:
-        memcpy(&payload, payload_str, sizeof(Payload));
         if (payload.op == EXIT)
             break;
         if (payload.op < 0 || payload.op > EXIT) {
@@ -130,10 +125,7 @@ void load_backup() {
         return;
     }
 
-    char catalog_str[sizeof(Catalog)];
-    fread(catalog_str, sizeof(Catalog), 1, f);
-    // Coverts a byte stream to a Catalog object:
-    memcpy(&CATALOG, catalog_str, sizeof(Catalog));
+    fread(&CATALOG, sizeof(Catalog), 1, f);
     fclose(f);
 }
 
