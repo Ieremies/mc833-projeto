@@ -25,6 +25,19 @@ void wait_for_enter() {
 
 /**===========================================================================*/
 /**
+ * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
+ * @details
+ * @return Struct Payload com as informações a serem colocadas
+ */
+Payload get_movies() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = GET;
+    ret.movie.id = ALL;
+    return ret;
+}
+
+/**
  * @brief Cadastrar um novo filme.
  * @details O identificador numérico será definido pelo sistema
  * @return Struct Payload com as informações a serem colocadas.
@@ -97,32 +110,10 @@ Payload put_genre() {
 }
 
 /**
- * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
- * @details
- * @return Struct Payload com as informações a serem colocadas
+ * @brief Remover um filme do catálogo a partir de seu ID
+ * @details Description
+ * @return Description
  */
-Payload get_movies() {
-    Payload ret;
-    memset(&ret, 0, sizeof(Payload));
-    ret.op = GET;
-    ret.movie.id = ALL;
-    return ret;
-}
-
-Payload get_movie_by_id() {
-    Payload ret;
-    memset(&ret, 0, sizeof(Payload));
-    ret.op = GET;
-
-    system("clear");
-    printf("Informações sobre um filme");
-
-    printf("\nDigite o id do filme: ");
-    scanf("%d", &ret.movie.id);
-
-    return ret;
-}
-
 Payload remove_movie() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
