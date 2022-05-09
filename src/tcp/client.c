@@ -169,8 +169,8 @@ void print_all_info(Movie movie) {
  */
 void list_all_info(Response response) {
     system("clear");
-    printf("Informação do filme:\n");
-    printf(" -> id  -  (ano) título by diretor | Gêneros\n");
+    printf("Informações dos filmes:\n");
+    printf(" -> id  - (ano) título by diretor | Gêneros\n");
     for (int i = 0; i < response.data.catalog.size; i++)
         print_all_info(response.data.catalog.movie_list[i]);
     wait_for_enter();
@@ -185,22 +185,46 @@ void list_all_info(Response response) {
 void list_info_by_genre(Response response) {
     char genre[MAX_STR_LEN];
     system("clear");
-    getchar(); // ignores the leading \n
     printf("Digite o gênero: ");
     fgets(genre, MAX_STR_LEN, stdin);
     genre[strcspn(genre, "\n")] = '\0';
 
     // REVIEW Do jeito que ele colocou na descrição, parecia que ele queria
     // que essa filtragem fosse feita pelo servidor.
-    printf("\nLista de filmes:\n");
+    system("clear");
+    printf("Lista de filmes:\n");
     printf(" -> título - nome do diretor - ano\n");
     Movie aux;
     for (int i = 0; i < response.data.catalog.size; i++) {
         aux = response.data.catalog.movie_list[i];
         if (contains_genre(&aux, genre))
-            printf(" -> %d - (%d) %s by %s ", aux.id, aux.year, aux.title,
-                   aux.director_name);
+            printf(" -> %s - %s - %d\n", aux.title, aux.director_name,
+                   aux.year);
     }
+    wait_for_enter();
+}
+
+/**
+ * @brief Função para imprimir apenas o filme com um id.
+ * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
+ * aquele que possue id igual ao fornecido.
+ * @param[in] response Resposta do servidor com o catálogo.
+ */
+void list_info_by_id(Response response) {
+    int id;
+    system("clear");
+    printf("Digite o id: ");
+    scanf("%d", &id);
+    getchar(); // ignores the leading \n
+
+    system("clear");
+    printf(" -> id  - (ano) título by diretor | Gêneros\n");
+    for (int i = 0; i < response.data.catalog.size; i++)
+        if (response.data.catalog.movie_list[i].id == id) {
+            print_all_info(response.data.catalog.movie_list[i]);
+            break;
+        }
+
     wait_for_enter();
 }
 /**
@@ -208,9 +232,11 @@ void list_info_by_genre(Response response) {
  */
 
 /**===========================================================================*/
-Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
-void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
-                                    list_info_by_genre};
+Payload (*handlers[])() = {post_movie, put_genre,  get_movies,
+                           get_movies, get_movies, get_movies};
+void (*get_handlers[])(Response) = {NULL,          NULL,
+                                    list_titles,   list_info_by_genre,
+                                    list_all_info, list_info_by_id};
 
 void print_menu() {
     system("clear");
@@ -218,6 +244,8 @@ void print_menu() {
     printf("\n1 - Acrescentar um novo gênero em um filme");
     printf("\n2 - Listar títulos");
     printf("\n3 - Listar informações por gênero");
+    printf("\n4 - Listar todas as informações de todos os filmes");
+    printf("\n5 - Listar todas as informações de um filme");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
