@@ -13,8 +13,8 @@
  * @param[in] year Ano de publicação
  * @return Ponteiro para a nova struct movie.
  */
-Movie *create_movie(int id, char *title, char *genre, char *director,
-                    int year) {
+Movie *create_movie(short id, char *title, char *genre, char *director,
+                    short year) {
     Movie *new = calloc(1, sizeof(Movie));
     new->id = id; // TODO acho que temos que mudar esse compostamento
     memcpy(new->title, title, MAX_STR_LEN);

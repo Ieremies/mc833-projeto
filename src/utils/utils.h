@@ -1,6 +1,6 @@
 #ifndef MC833_PROJETO_UTILS_H
 #define MC833_PROJETO_UTILS_H
 
-#define MAX_STR_LEN 200
+#define MAX_STR_LEN 30
 
 #endif // MC833_PROJETO_UTILS_H

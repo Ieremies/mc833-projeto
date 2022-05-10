@@ -56,7 +56,7 @@ Payload post_movie() {
     printf("Cadastro de filme");
 
     printf("\nDigite o id do filme: ");
-    scanf("%d", &ret.movie.id);
+    scanf("%hd", &ret.movie.id);
     getchar(); // ignores the leading \n
 
     printf("Digite o título do filme: ");
@@ -64,7 +64,7 @@ Payload post_movie() {
     ret.movie.title[strcspn(ret.movie.title, "\n")] = '\0';
 
     printf("Digite o número de gêneros do filme: ");
-    scanf("%d", &ret.movie.num_genres);
+    scanf("%hd", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
     for (int i = 0; i < ret.movie.num_genres; i++) {
@@ -78,7 +78,7 @@ Payload post_movie() {
     ret.movie.director_name[strcspn(ret.movie.director_name, "\n")] = '\0';
 
     printf("Digite o ano do filme: ");
-    scanf("%d", &ret.movie.year);
+    scanf("%hd", &ret.movie.year);
     getchar(); // ignores the leading \n
 
     return ret;
@@ -98,11 +98,10 @@ Payload put_genre() {
     printf("Adição de gênero em filme");
 
     printf("\nDigite o id do filme: ");
-    scanf("%d", &ret.movie.id);
+    scanf("%hd", &ret.movie.id);
 
-    // BUG Não precisa ser mais de um, caso dê problema sugiro simplificarmos.
     printf("Digite o número de gêneros que deseja adicionar a esse filme: ");
-    scanf("%d", &ret.movie.num_genres);
+    scanf("%hd", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
 
     for (int i = 0; i < ret.movie.num_genres; i++) {
@@ -128,7 +127,7 @@ Payload remove_movie() {
     printf("Remover filme");
 
     printf("\nDigite o id do filme a ser removido: ");
-    scanf("%d", &ret.movie.id);
+    scanf("%hd", &ret.movie.id);
     getchar(); // ignores the leading \n
 
     return ret;
@@ -144,7 +143,7 @@ Payload remove_movie() {
  */
 /**
  * @brief Imprimir os filmes obtidos.
- * @details Imprime no formato "-> ID - TÌTULO\n".
+ * @details Imprime no formato "-> ID - TÍTULO\n".
  * @param[in] response Resposta com o catálogo a ser impresso.
  */
 void list_titles(Response response) {
@@ -159,7 +158,7 @@ void list_titles(Response response) {
 
 /**
  * @brief Imprime todas as informações de um filme.
- * @details Fotmato " -> ID - ANO TÌTULO DIRETOR | GÊNEROS".
+ * @details Fotmato " -> ID - ANO TÍTULO DIRETOR | GÊNEROS".
  * @param[in] movie Filme cujas informações devemos imprimir.
  */
 void print_all_info(Movie movie) {
