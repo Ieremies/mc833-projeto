@@ -246,6 +246,9 @@ void (*get_handlers[])(Response) = {NULL,          NULL,
                                     list_titles,   list_info_by_genre,
                                     list_all_info, list_info_by_id};
 
+/**
+ * @brief Impressão do menu principal para o cliente.
+ */
 void print_menu() {
     system("clear");
     printf("0 - Cadastrar um novo filme");
@@ -259,6 +262,10 @@ void print_menu() {
     printf("\nDigite um comando: ");
 }
 
+/**
+ * @brief Função para enviar o fechamento de conexão.
+ * @details Envia um payload com a operação EXIT.
+ */
 void send_exit() {
     Payload payload;
     payload.op = EXIT;
@@ -266,6 +273,11 @@ void send_exit() {
         perror("send");
 }
 
+/**
+ * @brief Função que aguarda o retorno de operações get.
+ * @details Uma vez enviada, a operação GET espera um retorno.
+ * @param[in] cmd Qual comando foi enviado.
+ */
 void handle_get(char cmd) {
     Response response;
     if (recv(SOCKFD, &response, sizeof(Response), 0) == -1)
@@ -273,6 +285,11 @@ void handle_get(char cmd) {
     get_handlers[cmd](response);
 }
 
+/**
+ * @brief Função de controle do menu.
+ * @details A cada iteração do menu, lemos um caracter que indica qual o comando
+ * a ser realizado.
+ */
 void handle_user() {
     char cmd;
     print_menu();

@@ -28,7 +28,8 @@ void sigchld_handler(int s) {
 
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
-    while (waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
     errno = saved_errno;
 }
 
@@ -83,6 +84,11 @@ void del_movie(Movie movie, int socket) { delete_movie(&CATALOG, movie); }
 /**===========================================================================*/
 void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
 
+/**
+ * @brief Função que espera por uma conexão.
+ * @details Em um laço infinito, esperamos uma nova conexão chegar.
+ * @param[in] socket Socket a escutar.
+ */
 void handle_client(int socket) {
     Payload payload;
     while (1) {
@@ -100,6 +106,10 @@ void handle_client(int socket) {
     }
 }
 
+/**
+ * @brief Função para salvar o estado do catálogo.
+ * @details Escrevemos o estado atual a um arquivo para arquiva-lo.
+ */
 void backup() {
     FILE *f = fopen("catalog_database.data", "wb");
     if (f == NULL) {
@@ -115,15 +125,11 @@ void backup() {
     fclose(f);
 }
 
-void sigint_handler(int sig_num) { // Signal Handler for SIGINT
-    close(SOCKFD);
-    system("clear");
-    printf("server: exiting...\n");
-    backup();
-    sleep(1);
-    exit(0);
-}
-
+/**
+ * @brief Função para recuperar o backup.
+ * @details Lemos o arquivo que foi salvo anteriormente para recuperar o
+ * catálogo.
+ */
 void load_backup() {
     FILE *f = fopen("catalog_database.data", "rb");
     if (f == NULL) {
@@ -133,6 +139,20 @@ void load_backup() {
 
     fread(&CATALOG, sizeof(Catalog), 1, f);
     fclose(f);
+}
+
+/**
+ * @brief Função para finalizar o servidor
+ * @details Fechamos o socket, fazemos o backup do catálogo e terminamos o
+ * programa.
+ */
+void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+    close(SOCKFD);
+    system("clear");
+    printf("server: exiting...\n");
+    backup();
+    sleep(1);
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {
