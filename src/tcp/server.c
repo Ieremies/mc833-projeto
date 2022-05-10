@@ -3,7 +3,6 @@
 */
 
 #include "../data/catalog.h"
-#include "../data/movie.h"
 #include "../utils/net_utils.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -29,82 +28,73 @@ void sigchld_handler(int s) {
 
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
-    while (waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
     errno = saved_errno;
 }
 
+/**===========================================================================*/
+/**
+ * @name Interface com o banco de dados.
+ * Funções responsáveis por interagir com as informações,
+ * alheia de qualquer protocolo de rede.
+ * @{
+ */
+
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] movie Description
+ * @param[in] socket Description
+ */
 void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
 
-void put_movie(Movie movie, int socket) {
-    int i, found = 0;
-    for (i = 0; i < CATALOG.size; i++)
-        if (movie.id == CATALOG.movie_list[i].id) {
-            found = 1;
-            break;
-        }
-    if (!found) { // insert the new movie
-        add_movie(&CATALOG, movie);
-        return;
-    }
+/**
+ * @brief Função responsável por atualizar as informações de um filme.
+ * @details As informações que vierem preenchidas serão aquelas a serem
+ * atualizadas. O filme será determinado pelo ID, único campo obrigatório.
+ * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
+ * o resto vazio.
+ */
+void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
 
-    // Update the movie with the new values:
-    if (movie.title[0] != '\0')
-        memcpy(CATALOG.movie_list[i].title, movie.title, MAX_STR_LEN);
-    if (movie.num_genres > 0)
-        for (int j = 0; j < movie.num_genres; j++)
-            add_genre(&CATALOG.movie_list[i], movie.genre_list[j]);
-    if (movie.director_name[0] != '\0')
-        memcpy(CATALOG.movie_list[i].director_name, movie.director_name,
-               MAX_STR_LEN);
-    if (movie.year != 0)
-        CATALOG.movie_list[i].year = movie.year;
-}
-
-Response get_movie(int id) {
+/**
+ * @brief Função responsável por recuperar informações.
+ * @details Retorna todo o catálogo e é responsabilidade do client filtrar.
+ * @return Struct Resposne com todo o catálogo.
+ */
+void get_movie(Movie movie, int socket) {
     Response response;
     memset(&response, 0, sizeof(Payload));
-
-    // Return all catalog:
-    if (id == ALL) {
-        response.data.catalog = CATALOG;
-        return response;
-    }
-
-    // Return a specific movie:
-    int i, found = 0;
-    for (i = 0; i < CATALOG.size; i++)
-        if (id == CATALOG.movie_list[i].id) {
-            found = 1;
-            break;
-        }
-    if (!found) {
-        printf("\nMovie with id %d does not exist\n", id);
-        return response;
-    }
-    response.data.movie = CATALOG.movie_list[i];
-    return response;
-}
-
-void get_handler(Movie movie, int socket) {
-    Response response = get_movie(movie.id);
-    char response_str[sizeof(Response)];
-    memcpy(response_str, &response, sizeof(Response));
-    if (send(socket, response_str, sizeof(Response), 0) == -1)
+    response.data.catalog = CATALOG;
+    if (send(socket, &response, sizeof(Response), 0) == -1)
         perror("send");
 }
 
-void (*handlers[])(Movie, int) = {post_movie, get_handler, put_movie,
-                                  post_movie};
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] movie Description
+ * @param[in] socket Description
+ */
+void del_movie(Movie movie, int socket) { delete_movie(&CATALOG, movie); }
+/**
+ * @}
+ */
+/**===========================================================================*/
+void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
 
+/**
+ * @brief Função que espera por uma conexão.
+ * @details Em um laço infinito, esperamos uma nova conexão chegar.
+ * @param[in] socket Socket a escutar.
+ */
 void handle_client(int socket) {
     Payload payload;
-    char payload_str[sizeof(Payload)];
     while (1) {
-        if (recv(socket, payload_str, sizeof(Payload), 0) == -1)
+        if (recv(socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
 
-        // Coverts a byte stream to a Payload object:
-        memcpy(&payload, payload_str, sizeof(Payload));
         if (payload.op == EXIT)
             break;
         if (payload.op < 0 || payload.op > EXIT) {
@@ -116,6 +106,10 @@ void handle_client(int socket) {
     }
 }
 
+/**
+ * @brief Função para salvar o estado do catálogo.
+ * @details Escrevemos o estado atual a um arquivo para arquiva-lo.
+ */
 void backup() {
     FILE *f = fopen("catalog_database.data", "wb");
     if (f == NULL) {
@@ -131,15 +125,11 @@ void backup() {
     fclose(f);
 }
 
-void sigint_handler(int sig_num) { // Signal Handler for SIGINT
-    close(SOCKFD);
-    system("clear");
-    printf("server: exiting...\n");
-    backup();
-    sleep(1);
-    exit(0);
-}
-
+/**
+ * @brief Função para recuperar o backup.
+ * @details Lemos o arquivo que foi salvo anteriormente para recuperar o
+ * catálogo.
+ */
 void load_backup() {
     FILE *f = fopen("catalog_database.data", "rb");
     if (f == NULL) {
@@ -147,11 +137,22 @@ void load_backup() {
         return;
     }
 
-    char catalog_str[sizeof(Catalog)];
-    fread(catalog_str, sizeof(Catalog), 1, f);
-    // Coverts a byte stream to a Catalog object:
-    memcpy(&CATALOG, catalog_str, sizeof(Catalog));
+    fread(&CATALOG, sizeof(Catalog), 1, f);
     fclose(f);
+}
+
+/**
+ * @brief Função para finalizar o servidor
+ * @details Fechamos o socket, fazemos o backup do catálogo e terminamos o
+ * programa.
+ */
+void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+    close(SOCKFD);
+    system("clear");
+    printf("server: exiting...\n");
+    backup();
+    sleep(1);
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {

@@ -17,8 +17,39 @@
 
 int SOCKFD;
 
+void wait_for_enter() {
+    static char aux[MAX_STR_LEN];
+    printf("Aperte enter para continuar...");
+    fgets(aux, MAX_STR_LEN, stdin);
+}
+
+/**===========================================================================*/
+/**
+ * @name Operações do servidor
+ * Funções para montar o payload compatível com as operações do servidor.
+ * @{
+ */
+/**
+ * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
+ * @details
+ * @return Struct Payload com as informações a serem colocadas
+ */
+Payload get_movies() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = GET;
+    ret.movie.id = ALL;
+    return ret;
+}
+
+/**
+ * @brief Cadastrar um novo filme.
+ * @details O identificador numérico será definido pelo sistema
+ * @return Struct Payload com as informações a serem colocadas.
+ */
 Payload post_movie() {
     Payload ret;
+    memset(&ret, 0, sizeof(Payload));
     ret.op = POST;
 
     system("clear");
@@ -53,6 +84,11 @@ Payload post_movie() {
     return ret;
 }
 
+/**
+ * @brief Acrescentar um novo gênero a um filme
+ * @details
+ * @return Struct Payload com as informações a serem colocadas.
+ */
 Payload put_genre() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
@@ -64,6 +100,7 @@ Payload put_genre() {
     printf("\nDigite o id do filme: ");
     scanf("%d", &ret.movie.id);
 
+    // BUG Não precisa ser mais de um, caso dê problema sugiro simplificarmos.
     printf("Digite o número de gêneros que deseja adicionar a esse filme: ");
     scanf("%d", &ret.movie.num_genres);
     getchar(); // ignores the leading \n
@@ -77,84 +114,187 @@ Payload put_genre() {
     return ret;
 }
 
-Payload get_movies() {
+/**
+ * @brief Remover um filme do catálogo a partir de seu ID
+ * @details Description
+ * @return Description
+ */
+Payload remove_movie() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
-    ret.op = GET;
-    ret.movie.id = ALL;
+    ret.op = DEL;
+
+    system("clear");
+    printf("Remover filme");
+
+    printf("\nDigite o id do filme a ser removido: ");
+    scanf("%d", &ret.movie.id);
+    getchar(); // ignores the leading \n
+
     return ret;
 }
-
+/**
+ * @}
+ */
+/**===========================================================================*/
+/**
+ * @name Funções de impressão
+ * Funções auxiliares para imprimir os resultados obtidos.
+ * @{
+ */
+/**
+ * @brief Imprimir os filmes obtidos.
+ * @details Imprime no formato "-> ID - TÌTULO\n".
+ * @param[in] response Resposta com o catálogo a ser impresso.
+ */
 void list_titles(Response response) {
     system("clear");
     printf("Lista de filmes:\n");
     printf(" -> id  - título\n");
     for (int i = 0; i < response.data.catalog.size; i++)
-        printf(" -> %d - %s", response.data.catalog.movie_list[i].id,
+        printf(" -> %d - %s\n", response.data.catalog.movie_list[i].id,
                response.data.catalog.movie_list[i].title);
-    printf("Aperte enter para continuar...");
-    getchar();
-    getchar();
+    wait_for_enter();
 }
 
+/**
+ * @brief Imprime todas as informações de um filme.
+ * @details Fotmato " -> ID - ANO TÌTULO DIRETOR | GÊNEROS".
+ * @param[in] movie Filme cujas informações devemos imprimir.
+ */
+void print_all_info(Movie movie) {
+    printf(" -> %d - (%d) %s by %s |", movie.id, movie.year, movie.title,
+           movie.director_name);
+    for (int i = 0; i < movie.num_genres; i++)
+        printf(" %s", movie.genre_list[i]);
+    printf("\n");
+}
+
+/**
+ * @brief Summary
+ * @details Description
+ * @param[in] response Description
+ */
+void list_all_info(Response response) {
+    system("clear");
+    printf("Informações dos filmes:\n");
+    printf(" -> id  - (ano) título by diretor | Gêneros\n");
+    for (int i = 0; i < response.data.catalog.size; i++)
+        print_all_info(response.data.catalog.movie_list[i]);
+    wait_for_enter();
+}
+
+/**
+ * @brief Função para imprimir apenas os filmes de um gênero.
+ * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
+ * aqueles que possuem em sua lista de gêneros, o genero fornecido.
+ * @param[in] response Resposta do servidor com o catálogo.
+ */
 void list_info_by_genre(Response response) {
     char genre[MAX_STR_LEN];
     system("clear");
-    getchar(); // ignores the leading \n
     printf("Digite o gênero: ");
     fgets(genre, MAX_STR_LEN, stdin);
     genre[strcspn(genre, "\n")] = '\0';
 
-    printf("\nLista de filmes:\n");
+    // REVIEW Do jeito que ele colocou na descrição, parecia que ele queria
+    // que essa filtragem fosse feita pelo servidor.
+    system("clear");
+    printf("Lista de filmes:\n");
     printf(" -> título - nome do diretor - ano\n");
     Movie aux;
     for (int i = 0; i < response.data.catalog.size; i++) {
         aux = response.data.catalog.movie_list[i];
         if (contains_genre(&aux, genre))
-            printf(" -> %s - %s - %d", aux.title, aux.director_name, aux.year);
+            printf(" -> %s - %s - %d\n", aux.title, aux.director_name,
+                   aux.year);
     }
-    printf("Aperte enter para continuar...");
-    getchar();
+    wait_for_enter();
 }
 
-Payload (*handlers[])() = {post_movie, put_genre, get_movies, get_movies};
-void (*get_handlers[])(Response) = {NULL, NULL, list_titles,
-                                    list_info_by_genre};
+/**
+ * @brief Função para imprimir apenas o filme com um id.
+ * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
+ * aquele que possue id igual ao fornecido.
+ * @param[in] response Resposta do servidor com o catálogo.
+ */
+void list_info_by_id(Response response) {
+    int id;
+    system("clear");
+    printf("Digite o id: ");
+    scanf("%d", &id);
+    getchar(); // ignores the leading \n
 
+    system("clear");
+    printf(" -> id  - (ano) título by diretor | Gêneros\n");
+    for (int i = 0; i < response.data.catalog.size; i++)
+        if (response.data.catalog.movie_list[i].id == id) {
+            print_all_info(response.data.catalog.movie_list[i]);
+            break;
+        }
+
+    wait_for_enter();
+}
+/**
+ * @}
+ */
+
+/**===========================================================================*/
+Payload (*handlers[])() = {post_movie, put_genre,  get_movies,  get_movies,
+                           get_movies, get_movies, remove_movie};
+void (*get_handlers[])(Response) = {NULL,          NULL,
+                                    list_titles,   list_info_by_genre,
+                                    list_all_info, list_info_by_id};
+
+/**
+ * @brief Impressão do menu principal para o cliente.
+ */
 void print_menu() {
     system("clear");
     printf("0 - Cadastrar um novo filme");
     printf("\n1 - Acrescentar um novo gênero em um filme");
     printf("\n2 - Listar títulos");
     printf("\n3 - Listar informações por gênero");
+    printf("\n4 - Listar todas as informações de todos os filmes");
+    printf("\n5 - Listar todas as informações de um filme");
+    printf("\n6 - Remover filme");
     printf("\ne - exit");
     printf("\nDigite um comando: ");
 }
 
+/**
+ * @brief Função para enviar o fechamento de conexão.
+ * @details Envia um payload com a operação EXIT.
+ */
 void send_exit() {
     Payload payload;
     payload.op = EXIT;
-    char payload_str[sizeof(Payload)];
-    // Coverts the Payload to a byte stream:
-    memcpy(payload_str, &payload, sizeof(Payload));
-    if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
+    if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
         perror("send");
 }
 
+/**
+ * @brief Função que aguarda o retorno de operações get.
+ * @details Uma vez enviada, a operação GET espera um retorno.
+ * @param[in] cmd Qual comando foi enviado.
+ */
 void handle_get(char cmd) {
     Response response;
-    char response_str[sizeof(Response)];
-    if (recv(SOCKFD, response_str, sizeof(Response), 0) == -1)
+    if (recv(SOCKFD, &response, sizeof(Response), 0) == -1)
         perror("recv");
-    // Coverts a byte stream to a Response object:
-    memcpy(&response, response_str, sizeof(Response));
     get_handlers[cmd](response);
 }
 
+/**
+ * @brief Função de controle do menu.
+ * @details A cada iteração do menu, lemos um caracter que indica qual o comando
+ * a ser realizado.
+ */
 void handle_user() {
-    char cmd, payload_str[sizeof(Payload)];
+    char cmd;
     print_menu();
-    while (scanf(" %c", &cmd) == 1) {
+    while (scanf("%c", &cmd) == 1) {
+        getchar(); // ignores the leading \n
         if (cmd == 'e')
             break;
 
@@ -162,10 +302,7 @@ void handle_user() {
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
             Payload payload = handlers[cmd]();
-
-            // Coverts the Payload to a byte stream:
-            memcpy(payload_str, &payload, sizeof(Payload));
-            if (send(SOCKFD, payload_str, sizeof(Payload), 0) == -1)
+            if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
                 perror("send");
             if (payload.op == GET)
                 handle_get(cmd);

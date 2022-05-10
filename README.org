@@ -15,14 +15,14 @@ O servidor armazena as seguintes informações sobre os filmes:
 - [UDP] e uma imagem capa.
 
 Pelo menos as seguintes operações devem ser realizadas por um usuário (cliente):
-- cadastrar um novo filme, determinando um identificador numérico no cadastro;
-- acrescentar um novo gênero em um filme;
-- listar todos os títulos, junto a seus respectivos identificadores;
-- listar informações (título, diretor(a) e ano) de todos os filmes de um determinado gênero;
-- listar todas as informações de todos os filmes;
-- listar todas as informações de um filme a partir de seu identificador;
-- remover um filme a partir de seu identificador.
-- [UDP] baixar uma imagem capa de um filme a partir de seu identificador;
+- [-] cadastrar um novo filme, determinando um identificador numérico no cadastro;
+- [X] acrescentar um novo gênero em um filme;
+- [X] listar todos os títulos, junto a seus respectivos identificadores;
+- [-] listar informações (título, diretor(a) e ano) de todos os filmes de um determinado gênero;
+- [X] listar todas as informações de todos os filmes;
+- [ ] listar todas as informações de um filme a partir de seu identificador;
+- [-] remover um filme a partir de seu identificador.
+- [ ] [UDP] baixar uma imagem capa de um filme a partir de seu identificador;
 
 Considere que o servidor será administrado por um operador do serviço de streaming, o qual será o
 único usuário a realizar operações de escrita (inserção, alteração e remoção de filmes). Não é
