@@ -1,4 +1,4 @@
-% Created 2022-05-10 ter 11:50
+% Created 2022-05-10 ter 11:59
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -45,11 +45,11 @@
 \maketitle
 
 \section*{Introdução}
-\label{sec:orgf5d0dc7}
+\label{sec:org54b0d6c}
 Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
 
 \section*{Descrição}
-\label{sec:org3e61db7}
+\label{sec:org3d3db05}
 Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento de tais fica a cargo do cliente.
 
 Nosso servidor serve para fornecer uma lista de filme e suas informações. Ele pode ser utilizado como um armazém de informações que diversos clientes podem acessa-lo de forma assíncrona e fazer mudanças.
@@ -58,22 +58,22 @@ Por exemplo, digamos que um usuário está procurando por um filme de ação. Ca
 
 Vale ressaltar que não há autenticação dos usuários, partimos do pressuposto que todos eles são administradores.
 \section*{Casos de uso}
-\label{sec:org72c421b}
+\label{sec:orga72436f}
 Neste projeto, podemos utilizar \texttt{cmake} para construir o \texttt{Makefile}.
 
-\begin{source}
+\begin{verbatim}
 mkdir build
 cd build
 cmake ../CMakeLists.txt
 make
-\end{source}
+\end{verbatim}
 
 Após compilado, dois executáveis estarão disponíveis: \texttt{server} e \texttt{client}.
 
 O servidor, uma vez executado, sentará em silêncio aguardando conexões. Em contrapartida, o cliente irá propor operações e solicitar as informações.
 
 \section*{Armazenamento e estruturas de dados}
-\label{sec:orgdd75113}
+\label{sec:org394890d}
 As informações armazenadas estão contidas no arquivo \texttt{data/movie.h} que contém a \texttt{struct Movie} composta dos seguintes campos:
 \begin{description}
 \item[{\texttt{id}}] Um identificador numérico único.
@@ -87,15 +87,15 @@ As informações armazenadas estão contidas no arquivo \texttt{data/movie.h} qu
 Para armazenar uma lista de filmes, possuímos a \texttt{struct Catalog} definida no arquivo \texttt{data/Catalog.h} que se resume a um vetor de \texttt{struct Movie} e o indicador de quantos filmes a lista contém (\texttt{size}).
 
 \section*{Implementação}
-\label{sec:org96cb601}
+\label{sec:orgc5d0d98}
 \subsection*{Servidor}
-\label{sec:org9eedf27}
+\label{sec:org65ff9e9}
 No lado do servidor, começamos populando a \texttt{struct addrinf} com algumas informações e passando-a para a função \texttt{getaddrinfo()} que nos retorna uma lista ligada de IP's disponíveis. Como indicado pelo tutorial fornecido, iteramos pelas possibilidades recuperando o socket descriptor, conferimos se está totalmente livre para ser utilizado com \texttt{setsockopt} e nos conectamos ao primeiro disponível com \texttt{bind()}.
 
 Caso tudo isso tenha sido feito com êxito, garantimos que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço \texttt{while}, aceitamos novas conexões com \texttt{accept()} e executamos \texttt{handle\_client()}, função responsável por agir em vista das requisições do cliente.
 
 \subsubsection*{Operações do servidor}
-\label{sec:orgdc08a14}
+\label{sec:org920b4cb}
 O servidor é capaz de servir as seguintes operações:
 \begin{description}
 \item[{\textbf{GET}}] retorna todo o catálogo.
@@ -106,13 +106,13 @@ O servidor é capaz de servir as seguintes operações:
 
 
 \subsection*{Cliente}
-\label{sec:org93f1269}
+\label{sec:org3a8640a}
 No lado do cliente fazemos algo muito parecido. Populamos a \texttt{struct addrinf} com as informações e, junto com a função \texttt{getaddrinfo()}, iteramos pelos possíveis sockets até conseguirmos nos conectar a algum com o \texttt{bind()}. Caso tudo isso tenha sido bem sucedido, fazemos a limpeza final antes de passar o controle para a função \texttt{handle\_user()}.
 
 O cliente comunica-se com o servidor mediante as operações acima listadas, mas para o nosso usuário mais opções são apresentadas. Para as diferentes listagem de filmes e suas informações, fazemos esse filtro do lado do cliente, permitindo um controle maior de quais informações são apresentadas baseado no cliente. Seria possível, então, termos diversos clientes, com interfaces diferentes, conectando-se ao mesmo servidor.
 
 \subsubsection*{Operações do cliente}
-\label{sec:org9385fdb}
+\label{sec:org5cebaef}
 Do ponto de vista do cliente, ele pode realizar as seguintes operações:
 
 \begin{itemize}
@@ -129,6 +129,6 @@ Do ponto de vista do cliente, ele pode realizar as seguintes operações:
 \end{itemize}
 
 \section*{Conclusão}
-\label{sec:org8db9fb8}
+\label{sec:org04c374d}
 Assim, temos um servidor capaz de realizar operações e um cliente capaz de comunicar-se com o servidor e solicitar informações ao usuário.
 \end{document}

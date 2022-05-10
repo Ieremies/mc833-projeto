@@ -16,12 +16,12 @@ Vale ressaltar que não há autenticação dos usuários, partimos do pressupost
 * Casos de uso
 Neste projeto, podemos utilizar =cmake= para construir o =Makefile=.
 
-#+begin_source bash
+#+begin_src bash
 mkdir build
 cd build
 cmake ../CMakeLists.txt
 make
-#+end_source
+#+end_src
 
 Após compilado, dois executáveis estarão disponíveis: =server= e =client=.
 
