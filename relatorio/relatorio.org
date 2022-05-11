@@ -5,6 +5,8 @@
 * Introdução
 Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
 
+Esse relatório tem por objetivo descrever o processo e as decisões. Para a documentação mais técnica, referencia-se aos arquivos fonte, ou de forma online no site [[https://ieremies.dev/mc833-projeto/html/]] ou via [[https://ieremies.dev/mc833-projeto/latex/refman.pdf][pdf]].
+
 * Descrição
 Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento de tais fica a cargo do cliente.
 
