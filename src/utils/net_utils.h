@@ -6,8 +6,6 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#define ALL -1
-
 typedef enum { POST, GET, PUT, DEL, EXIT } Operation;
 
 /**
@@ -19,17 +17,13 @@ typedef struct {
     Movie movie; /**< Informações de filme a serem utilizadas pela operação */
 } Payload;
 
-typedef union {
-    Catalog catalog;
-    Movie movie;
-} CatalogMovie;
-
 /**
  * @struct Response
  * Struct utilizada como respota do servidor.
  */
 typedef struct {
-    CatalogMovie data; /**< Tipo de data a ser retornada. */
+    unsigned int n_movies;
+    Catalog data; /**< Tipo de data a ser retornada. */
 } Response;
 
 void *get_in_addr(struct sockaddr *sa);

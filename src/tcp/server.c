@@ -28,7 +28,8 @@ void sigchld_handler(int s) {
 
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
-    while (waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
     errno = saved_errno;
 }
 
@@ -57,17 +58,46 @@ void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
  */
 void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
 
+void send_catalog(Catalog *catalog, int socket) {
+    int size = sizeof(int) + catalog->size * sizeof(Movie);
+    if (send(socket, catalog, size, 0) != size)
+        perror("send");
+}
+
+void get_movie_by_id(int id, int socket) {
+    Catalog response;
+    memset(&response, 0, sizeof(Catalog));
+
+    for (int i = 0; i < CATALOG.size; i++)
+        if (id == CATALOG.movie_list[i].id)
+            add_movie(&response, CATALOG.movie_list[i]);
+
+    send_catalog(&response, socket);
+}
+
+void get_movie_by_genre(char *genre, int socket) {
+    Catalog response;
+    memset(&response, 0, sizeof(Catalog));
+
+    for (int i = 0; i < CATALOG.size; i++)
+        if (contains_genre(&CATALOG.movie_list[i], genre))
+            add_movie(&response, CATALOG.movie_list[i]);
+
+    send_catalog(&response, socket);
+}
+
 /**
  * @brief Função responsável por recuperar informações.
  * @details Retorna todo o catálogo e é responsabilidade do client filtrar.
  * @return Struct Resposne com todo o catálogo.
  */
 void get_movie(Movie movie, int socket) {
-    Response response;
-    memset(&response, 0, sizeof(Payload));
-    response.data.catalog = CATALOG;
-    if (send(socket, &response, sizeof(Response), 0) == -1)
-        perror("send");
+    if (movie.id != 0)
+        get_movie_by_id(movie.id, socket);
+    else if (movie.num_genres != 0)
+        get_movie_by_genre(movie.genre_list[0], socket);
+    else
+        send_catalog(&CATALOG, socket);
 }
 
 /**
@@ -91,11 +121,13 @@ void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
 void handle_client(int socket) {
     Payload payload;
     while (1) {
+        // Payload tem tamanho sizeof(int) + sizeof(movie)
         if (recv(socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
 
         if (payload.op == EXIT)
             break;
+
         if (payload.op < 0 || payload.op > EXIT) {
             printf("\nInvalid operation\n");
             continue;

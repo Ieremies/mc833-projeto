@@ -10,9 +10,9 @@
  * Lista de filmes (movies).
  */
 typedef struct {
-    char size;                    /**< Quantidade de filmes na lista */
+    int size;                     /**< Quantidade de filmes na lista */
     Movie movie_list[MAX_MOVIES]; /**< Lista que armazena os filmes */
-} Catalog; // **SHOULD NOT EXCED 4096 BYTES!!!**
+} Catalog;                        // **SHOULD NOT EXCED 4096 BYTES!!!**
 
 void add_movie(Catalog *catalog, Movie movie);
 void update_movie(Catalog *catalog, Movie movie);

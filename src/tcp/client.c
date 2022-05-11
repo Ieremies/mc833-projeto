@@ -38,7 +38,9 @@ Payload get_movies() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
     ret.op = GET;
-    ret.movie.id = ALL;
+    // TODO Trocar pela requisição de ID ou um gênero
+    // Daí coloca isso no movie que vai no payload.
+    ret.movie.id = 1;
     return ret;
 }
 
@@ -146,13 +148,13 @@ Payload remove_movie() {
  * @details Imprime no formato "-> ID - TÍTULO\n".
  * @param[in] response Resposta com o catálogo a ser impresso.
  */
-void list_titles(Response response) {
+void list_titles(Catalog response) {
     system("clear");
     printf("Lista de filmes:\n");
     printf(" -> id  - título\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        printf(" -> %d - %s\n", response.data.catalog.movie_list[i].id,
-               response.data.catalog.movie_list[i].title);
+    for (int i = 0; i < response.size; i++)
+        printf(" -> %d - %s\n", response.movie_list[i].id,
+               response.movie_list[i].title);
     wait_for_enter();
 }
 
@@ -174,64 +176,12 @@ void print_all_info(Movie movie) {
  * @details Description
  * @param[in] response Description
  */
-void list_all_info(Response response) {
+void list_all_info(Catalog response) {
     system("clear");
     printf("Informações dos filmes:\n");
     printf(" -> id  - (ano) título by diretor | Gêneros\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        print_all_info(response.data.catalog.movie_list[i]);
-    wait_for_enter();
-}
-
-/**
- * @brief Função para imprimir apenas os filmes de um gênero.
- * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
- * aqueles que possuem em sua lista de gêneros, o genero fornecido.
- * @param[in] response Resposta do servidor com o catálogo.
- */
-void list_info_by_genre(Response response) {
-    char genre[MAX_STR_LEN];
-    system("clear");
-    printf("Digite o gênero: ");
-    fgets(genre, MAX_STR_LEN, stdin);
-    genre[strcspn(genre, "\n")] = '\0';
-
-    // REVIEW Do jeito que ele colocou na descrição, parecia que ele queria
-    // que essa filtragem fosse feita pelo servidor.
-    system("clear");
-    printf("Lista de filmes:\n");
-    printf(" -> título - nome do diretor - ano\n");
-    Movie aux;
-    for (int i = 0; i < response.data.catalog.size; i++) {
-        aux = response.data.catalog.movie_list[i];
-        if (contains_genre(&aux, genre))
-            printf(" -> %s - %s - %d\n", aux.title, aux.director_name,
-                   aux.year);
-    }
-    wait_for_enter();
-}
-
-/**
- * @brief Função para imprimir apenas o filme com um id.
- * @details A partir do catálogo solicitado ao servidor, imprimimos apenas
- * aquele que possue id igual ao fornecido.
- * @param[in] response Resposta do servidor com o catálogo.
- */
-void list_info_by_id(Response response) {
-    int id;
-    system("clear");
-    printf("Digite o id: ");
-    scanf("%d", &id);
-    getchar(); // ignores the leading \n
-
-    system("clear");
-    printf(" -> id  - (ano) título by diretor | Gêneros\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        if (response.data.catalog.movie_list[i].id == id) {
-            print_all_info(response.data.catalog.movie_list[i]);
-            break;
-        }
-
+    for (int i = 0; i < response.size; i++)
+        print_all_info(response.movie_list[i]);
     wait_for_enter();
 }
 /**
