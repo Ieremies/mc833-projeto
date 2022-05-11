@@ -1,115 +1,77 @@
-#+Title: Projeto 1 - MC833
+#+Title: MC833 - Relatório do Projeto 1
+#+Author: Ieremies Romero, Lucas de Oliveira Silva
+#+options: num:nil toc:nil
 
-* Requerimentos
-Projetos 1 e 2: Desenvolva programas para o uso de sockets na comunicação cliente com
-- servidor concorrente sobre TCP (projeto 1), e
-- servidor iterativo sobre UDP (projeto 2)
-usando um objeto servidor de streaming de vídeo (filmes) que suporta múltiplos usuários.
+* Introdução
+Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
 
-O servidor armazena as seguintes informações sobre os filmes:
-- identificador numérico,
-- título,
-- gênero,
-- diretor(a),
- -ano de lançamento,
-- [UDP] e uma imagem capa.
+Esse relatório tem por objetivo descrever o processo e as decisões. Para a documentação mais técnica, referencia-se aos arquivos fonte, ou de forma online no site [[https://ieremies.dev/mc833-projeto/html/]] ou via [[https://ieremies.dev/mc833-projeto/latex/refman.pdf][pdf]].
 
-Pelo menos as seguintes operações devem ser realizadas por um usuário (cliente):
-- [-] cadastrar um novo filme, determinando um identificador numérico no cadastro;
-- [X] acrescentar um novo gênero em um filme;
-- [X] listar todos os títulos, junto a seus respectivos identificadores;
-- [-] listar informações (título, diretor(a) e ano) de todos os filmes de um determinado gênero;
-- [X] listar todas as informações de todos os filmes;
-- [ ] listar todas as informações de um filme a partir de seu identificador;
-- [-] remover um filme a partir de seu identificador.
-- [ ] [UDP] baixar uma imagem capa de um filme a partir de seu identificador;
+* Descrição
+Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento de tais fica a cargo do cliente.
 
-Considere que o servidor será administrado por um operador do serviço de streaming, o qual será o
-único usuário a realizar operações de escrita (inserção, alteração e remoção de filmes). Não é
-necessário que o sistema faça autenticação de usuários através de senhas ou outros mecanismos.
+Nosso servidor serve para fornecer uma lista de filme e suas informações. Ele pode ser utilizado como um armazém de informações que diversos clientes podem acessa-lo de forma assíncrona e fazer mudanças.
 
-Dado que um filme pode conter múltiplos gêneros, o campo gênero de um filme poderá ser
-manipulado como uma string, podendo-se considerar que um filme pertence a um gênero se este for
-uma substring do campo de gênero de um filme.
+Por exemplo, digamos que um usuário está procurando por um filme de ação. Caso o administrador queira adicionar mais um filme de ação enquanto isso ocorre, o servidor será capaz de fazer as modificações e já servir, quando requisitado, o novo conjunto de filmes.
 
-Em relação às imagens capa, podem ser utilizadas (no contexto deste projeto) imagens gratuitas e
-sem direitos autorais encontradas em websites. Os dados deverão ser armazenados pelo servidor
-como arquivos.
+Vale ressaltar que não há autenticação dos usuários, partimos do pressuposto que todos eles são administradores.
+* Casos de uso
+Neste projeto, podemos utilizar =cmake= para construir o =Makefile=.
 
-Nos testes a serem realizados, deverão ser cadastrados de 5 a 10 filmes.
-Sugere-se, mas não é obrigatório, o uso de máquinas diferentes para cliente e servidor.
+#+begin_src bash
+mkdir build
+cd build
+cmake ../CMakeLists.txt
+make
+#+end_src
 
-Opcional – coletar as seguintes medidas de atrasos:
-- Tempo de Resposta da Requisição: entre o envio de uma requisição do cliente e o recebimento
-da resposta do servidor.
-- Processamento: entre o recebimento da requisição no servidor e o envio da resposta ao cliente.
-- Comunicação: obtido a partir da subtração dos valores acima.
-- [UDP] Posteriormente, compare essas medidas para diferentes tipos de operações (listagem das
-informações de um filme, e listagem das informações de todos os filmes), entre os protocolos
-TCP e UDP
+Após compilado, dois executáveis estarão disponíveis: =server= e =client=.
 
-** Entregar:
-Datas de entrega:
-Projeto 1: 4 de Maio;
-Projeto 2: 25 de Maio.
-*** Código fonte (com makefile)
-Os programas desenvolvidos em C. Devem estar bem estruturados e com comentários
-descrevendo os procedimentos. Devem permitir a compilação e execução;
-*** Relatório.
-Deve conter introdução, descrição geral e casos de uso, armazenamento e estruturas de
-dados, detalhes de implementação, e conclusão. Para o projeto 2, manter a estrutura do trabalho 1,
-acrescido de uma seção com a comparação entre o software desenvolvido nos dois projetos em termos
-de tamanho de código, confiabilidade, e nível de abstração. Caso opte por coletar as medidas de atraso
-descritas anteriormente (opcional), elabore uma comparação dos valores de atraso de comunicação
-obtidos nos dois projetos, em uma operação de listagem das informações de um filme, e também em
-uma operação de listagem das informações de todos os filmes.
-** Exemplos de filmes:
-Título: O Resgate do Soldado Brian
-Gênero: Drama, Guerra
-Diretor(a): Steven Spielburg
-Ano de Lançamento: 1999
-Título: Djanko Livre
-Gênero: Ação, Faroeste
-Diretor(a): Quentin Tarantoni
-Ano de Lançamento: 2013
-* TCP Client-server
-** Server side
-socket() -> bind() -> listen() -> accept() --{ blocks until connection from client }--> repeat : [read() -> write()] -> read() -> close()
+O servidor, uma vez executado, sentará em silêncio aguardando conexões. Em contrapartida, o cliente irá propor operações e solicitar as informações.
 
-A cada accept inicia uma nova conexão.
+* Armazenamento e estruturas de dados
+As informações armazenadas estão contidas no arquivo =data/movie.h= que contém a =struct Movie= composta dos seguintes campos:
+- =id= :: Um identificador numérico único.
+- =title= :: Uma string contendo o título do filme.
+- =num_genres= :: A quantidade de gêneros cadastrados ao filme.
+- =genre_list= :: Os gêneros cadastrados ao filme.
+- =director_name= :: Uma string contendo o nome do diretor.
+- =year= :: O ano de publicação do filme.
 
-#+begin_source c
-int main ()
-{
-    int status;
-    struct addrinfo hints;
-    struct addrinfo *servinfo;
+Para armazenar uma lista de filmes, possuímos a =struct Catalog= definida no arquivo =data/Catalog.h= que se resume a um vetor de =struct Movie= e o indicador de quantos filmes a lista contém (=size=).
 
-    menset ( &hints, 0, sizeof ( hints ) )
-    hints.ai
+* Implementação
+** Servidor
+No lado do servidor, começamos populando a =struct addrinf= com algumas informações e passando-a para a função =getaddrinfo()= que nos retorna uma lista ligada de IP's disponíveis. Como indicado pelo tutorial fornecido, iteramos pelas possibilidades recuperando o socket descriptor, conferimos se está totalmente livre para ser utilizado com =setsockopt= e nos conectamos ao primeiro disponível com =bind()=.
 
-    // [ ... ]
+Caso tudo isso tenha sido feito com êxito, garantimos que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço =while=, aceitamos novas conexões com =accept()= e executamos =handle_client()=, função responsável por agir em vista das requisições do cliente.
+
+É importante perceber que restringimos o tamanho do catálogo e das informações dos filmes para que caibam no datagrama do TCP.
+
+*** Operações do servidor
+O servidor é capaz de servir as seguintes operações:
+- *GET* :: retorna todo o catálogo.
+- *POST* :: coloca um novo filme no catálogo, determinando um ID único para ele. Caso não haja espaço, nada é feito.
+- *PUT* :: baseado no ID de uma struct movie, modificamos as informações do tal filme baseado nas informações preenchidas na struct.
+- *DEL* :: baseado no ID de uma struct movie, removemos o filme com a mesma ID do catálogo.
 
 
-    gettaddrsinfo ( NULL, "3490", &hints, &res );
+** Cliente
+No lado do cliente fazemos algo muito parecido. Populamos a =struct addrinf= com as informações e, junto com a função =getaddrinfo()=, iteramos pelos possíveis sockets até conseguirmos nos conectar a algum com o =bind()=. Caso tudo isso tenha sido bem sucedido, fazemos a limpeza final antes de passar o controle para a função =handle_user()=.
 
-    sockfd = socket ( res->ai_family, res->ai_socket_type, res->ai_protocol )
-    if ( sockfd < 0 )
-        printf ( "Socket creation failled!\n" );
+O cliente comunica-se com o servidor mediante as operações acima listadas, mas para o nosso usuário mais opções são apresentadas. Para as diferentes listagem de filmes e suas informações, fazemos esse filtro do lado do cliente, permitindo um controle maior de quais informações são apresentadas baseado no cliente. Seria possível, então, termos diversos clientes, com interfaces diferentes, conectando-se ao mesmo servidor.
 
-    if ( bind ( sockfd, res->ai_addr, res->ai_addrlen ) < 0 )
-        printf ( "Failled to bind to socket!\n" );
+*** Operações do cliente
+Do ponto de vista do cliente, ele pode realizar as seguintes operações:
+# TODO o id do filme!
+- cadastrar um novo filme, fornecendo suas informações.
+- acrescentar um gênero a um filme.
+- deletar um file a partir de seu identificador.
+- listar filmes:
+  - com seus títulos e indicadores.
+  - com todas as informações.
+  - de um gênero específico.
+  - todas as informações de um filme em específico.
 
-    listen
-}
-#+end_source
-** Client side
-
-#+begin_source c
-int main ()
-{
-    if ( connect ( sockfd, res->ai_addr, res->aiaddrlen ) < 0 )
-        perror ( "Failled to connect to server!\n" );
-}
-#+end_source
-* Ideias
+* Conclusão
+Assim, temos um servidor capaz de realizar operações e um cliente capaz de comunicar-se com o servidor e solicitar informações ao usuário.
