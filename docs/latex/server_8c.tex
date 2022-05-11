@@ -1,0 +1,278 @@
+\hypertarget{server_8c}{}\doxysection{src/tcp/server.c File Reference}
+\label{server_8c}\index{src/tcp/server.c@{src/tcp/server.c}}
+{\ttfamily \#include \char`\"{}../data/catalog.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../utils/net\+\_\+utils.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$netdb.\+h$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{server_8c_a614217d263be1fb1a5f76e2ff7be19a2}{PORT}}~\char`\"{}3490\char`\"{}
+\item 
+\#define \mbox{\hyperlink{server_8c_aeefbbafa97642defe3ee6c3080b7d66f}{BACKLOG}}~10
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{server_8c_a6c2d9589ac70568b8e3a6980bb3d45d6}{sigchld\+\_\+handler}} (int s)
+\item 
+void \mbox{\hyperlink{server_8c_ace5267c9e86df2dacbad641a8f144ba1}{handle\+\_\+client}} (int socket)
+\begin{DoxyCompactList}\small\item\em Função que espera por uma conexão. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_a24de714b53d0c69d3aae18154b208c62}{backup}} ()
+\begin{DoxyCompactList}\small\item\em Função para salvar o estado do catálogo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_a7c9b132b55230b710b6bc980e6f8ae5a}{load\+\_\+backup}} ()
+\begin{DoxyCompactList}\small\item\em Função para recuperar o backup. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_a4e64e19ce30b595523725c16450403dd}{sigint\+\_\+handler}} (int sig\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Função para finalizar o servidor. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{server_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Interface com o banco de dados.}\par
+{\em ===========================================================================
+
+Funções responsáveis por interagir com as informações, alheia de qualquer protocolo de rede. }\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{server_8c_a250c159a6b12c3065bcd09b99bd0089a}{post\+\_\+movie}} (\mbox{\hyperlink{struct_movie}{Movie}} movie, int socket)
+\begin{DoxyCompactList}\small\item\em Summary. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_a66dbd31359990cd146e67c6d1fb71d1c}{put\+\_\+movie}} (\mbox{\hyperlink{struct_movie}{Movie}} movie, int socket)
+\begin{DoxyCompactList}\small\item\em Função responsável por atualizar as informações de um filme. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_a33059a7db0ab496835d10a1ae5f42738}{get\+\_\+movie}} (\mbox{\hyperlink{struct_movie}{Movie}} movie, int socket)
+\begin{DoxyCompactList}\small\item\em Função responsável por recuperar informações. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_aec1060eededf36f244a4e77cddbe2046}{del\+\_\+movie}} (\mbox{\hyperlink{struct_movie}{Movie}} movie, int socket)
+\begin{DoxyCompactList}\small\item\em Summary. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{server_8c_a2e21797b67256bce31275979161dd072}{SOCKFD}}
+\item 
+\mbox{\hyperlink{struct_catalog}{Catalog}} \mbox{\hyperlink{server_8c_a2d7000e334beb828a027212bc1caea27}{CATALOG}}
+\item 
+void($\ast$ \mbox{\hyperlink{server_8c_a4ff7332a974a797ebb137c4693e770aa}{handlers}} \mbox{[}$\,$\mbox{]})(\mbox{\hyperlink{struct_movie}{Movie}}, int) = \{\mbox{\hyperlink{server_8c_a250c159a6b12c3065bcd09b99bd0089a}{post\+\_\+movie}}, \mbox{\hyperlink{server_8c_a33059a7db0ab496835d10a1ae5f42738}{get\+\_\+movie}}, \mbox{\hyperlink{server_8c_a66dbd31359990cd146e67c6d1fb71d1c}{put\+\_\+movie}}, \mbox{\hyperlink{server_8c_aec1060eededf36f244a4e77cddbe2046}{del\+\_\+movie}}\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{server_8c_aeefbbafa97642defe3ee6c3080b7d66f}\label{server_8c_aeefbbafa97642defe3ee6c3080b7d66f}} 
+\index{server.c@{server.c}!BACKLOG@{BACKLOG}}
+\index{BACKLOG@{BACKLOG}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{BACKLOG}{BACKLOG}}
+{\footnotesize\ttfamily \#define BACKLOG~10}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00021}{21}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a614217d263be1fb1a5f76e2ff7be19a2}\label{server_8c_a614217d263be1fb1a5f76e2ff7be19a2}} 
+\index{server.c@{server.c}!PORT@{PORT}}
+\index{PORT@{PORT}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{PORT}{PORT}}
+{\footnotesize\ttfamily \#define PORT~\char`\"{}3490\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00019}{19}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{server_8c_a24de714b53d0c69d3aae18154b208c62}\label{server_8c_a24de714b53d0c69d3aae18154b208c62}} 
+\index{server.c@{server.c}!backup@{backup}}
+\index{backup@{backup}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{backup()}{backup()}}
+{\footnotesize\ttfamily void backup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Função para salvar o estado do catálogo. 
+
+Escrevemos o estado atual a um arquivo para arquiva-\/lo. 
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00112}{112}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_aec1060eededf36f244a4e77cddbe2046}\label{server_8c_aec1060eededf36f244a4e77cddbe2046}} 
+\index{server.c@{server.c}!del\_movie@{del\_movie}}
+\index{del\_movie@{del\_movie}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{del\_movie()}{del\_movie()}}
+{\footnotesize\ttfamily void del\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie,  }\item[{int}]{socket }\end{DoxyParamCaption})}
+
+
+
+Summary. 
+
+Description 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em movie} & Description \\
+\hline
+\mbox{\texttt{ in}}  & {\em socket} & Description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00079}{79}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a33059a7db0ab496835d10a1ae5f42738}\label{server_8c_a33059a7db0ab496835d10a1ae5f42738}} 
+\index{server.c@{server.c}!get\_movie@{get\_movie}}
+\index{get\_movie@{get\_movie}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{get\_movie()}{get\_movie()}}
+{\footnotesize\ttfamily void get\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie,  }\item[{int}]{socket }\end{DoxyParamCaption})}
+
+
+
+Função responsável por recuperar informações. 
+
+Retorna todo o catálogo e é responsabilidade do client filtrar. \begin{DoxyReturn}{Returns}
+Struct Resposne com todo o catálogo. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00065}{65}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_ace5267c9e86df2dacbad641a8f144ba1}\label{server_8c_ace5267c9e86df2dacbad641a8f144ba1}} 
+\index{server.c@{server.c}!handle\_client@{handle\_client}}
+\index{handle\_client@{handle\_client}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{handle\_client()}{handle\_client()}}
+{\footnotesize\ttfamily void handle\+\_\+client (\begin{DoxyParamCaption}\item[{int}]{socket }\end{DoxyParamCaption})}
+
+
+
+Função que espera por uma conexão. 
+
+Em um laço infinito, esperamos uma nova conexão chegar. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em socket} & Socket a escutar. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00091}{91}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a7c9b132b55230b710b6bc980e6f8ae5a}\label{server_8c_a7c9b132b55230b710b6bc980e6f8ae5a}} 
+\index{server.c@{server.c}!load\_backup@{load\_backup}}
+\index{load\_backup@{load\_backup}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{load\_backup()}{load\_backup()}}
+{\footnotesize\ttfamily void load\+\_\+backup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Função para recuperar o backup. 
+
+Lemos o arquivo que foi salvo anteriormente para recuperar o catálogo. 
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00132}{132}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{server_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{server.c@{server.c}!main@{main}}
+\index{main@{main}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00157}{157}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a250c159a6b12c3065bcd09b99bd0089a}\label{server_8c_a250c159a6b12c3065bcd09b99bd0089a}} 
+\index{server.c@{server.c}!post\_movie@{post\_movie}}
+\index{post\_movie@{post\_movie}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{post\_movie()}{post\_movie()}}
+{\footnotesize\ttfamily void post\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie,  }\item[{int}]{socket }\end{DoxyParamCaption})}
+
+
+
+Summary. 
+
+Description 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em movie} & Description \\
+\hline
+\mbox{\texttt{ in}}  & {\em socket} & Description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00049}{49}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a66dbd31359990cd146e67c6d1fb71d1c}\label{server_8c_a66dbd31359990cd146e67c6d1fb71d1c}} 
+\index{server.c@{server.c}!put\_movie@{put\_movie}}
+\index{put\_movie@{put\_movie}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{put\_movie()}{put\_movie()}}
+{\footnotesize\ttfamily void put\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie,  }\item[{int}]{socket }\end{DoxyParamCaption})}
+
+
+
+Função responsável por atualizar as informações de um filme. 
+
+As informações que vierem preenchidas serão aquelas a serem atualizadas. O filme será determinado pelo ID, único campo obrigatório. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em movie} & Struct com as informações a serem atualizadas preenchidas e o resto vazio. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00058}{58}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a6c2d9589ac70568b8e3a6980bb3d45d6}\label{server_8c_a6c2d9589ac70568b8e3a6980bb3d45d6}} 
+\index{server.c@{server.c}!sigchld\_handler@{sigchld\_handler}}
+\index{sigchld\_handler@{sigchld\_handler}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{sigchld\_handler()}{sigchld\_handler()}}
+{\footnotesize\ttfamily void sigchld\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{s }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00026}{26}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a4e64e19ce30b595523725c16450403dd}\label{server_8c_a4e64e19ce30b595523725c16450403dd}} 
+\index{server.c@{server.c}!sigint\_handler@{sigint\_handler}}
+\index{sigint\_handler@{sigint\_handler}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{sigint\_handler()}{sigint\_handler()}}
+{\footnotesize\ttfamily void sigint\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{sig\+\_\+num }\end{DoxyParamCaption})}
+
+
+
+Função para finalizar o servidor. 
+
+Fechamos o socket, fazemos o backup do catálogo e terminamos o programa. 
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00148}{148}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{server_8c_a2d7000e334beb828a027212bc1caea27}\label{server_8c_a2d7000e334beb828a027212bc1caea27}} 
+\index{server.c@{server.c}!CATALOG@{CATALOG}}
+\index{CATALOG@{CATALOG}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{CATALOG}{CATALOG}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_catalog}{Catalog}} CATALOG}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00024}{24}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a4ff7332a974a797ebb137c4693e770aa}\label{server_8c_a4ff7332a974a797ebb137c4693e770aa}} 
+\index{server.c@{server.c}!handlers@{handlers}}
+\index{handlers@{handlers}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{handlers}{handlers}}
+{\footnotesize\ttfamily void($\ast$ handlers\mbox{[}$\,$\mbox{]})(\mbox{\hyperlink{struct_movie}{Movie}}, int) (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{,  }\item[{int}]{ }\end{DoxyParamCaption}) = \{\mbox{\hyperlink{server_8c_a250c159a6b12c3065bcd09b99bd0089a}{post\+\_\+movie}}, \mbox{\hyperlink{server_8c_a33059a7db0ab496835d10a1ae5f42738}{get\+\_\+movie}}, \mbox{\hyperlink{server_8c_a66dbd31359990cd146e67c6d1fb71d1c}{put\+\_\+movie}}, \mbox{\hyperlink{server_8c_aec1060eededf36f244a4e77cddbe2046}{del\+\_\+movie}}\}}
+
+=========================================================================== 
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00084}{84}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+
+\mbox{\Hypertarget{server_8c_a2e21797b67256bce31275979161dd072}\label{server_8c_a2e21797b67256bce31275979161dd072}} 
+\index{server.c@{server.c}!SOCKFD@{SOCKFD}}
+\index{SOCKFD@{SOCKFD}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{SOCKFD}{SOCKFD}}
+{\footnotesize\ttfamily int SOCKFD}
+
+
+
+Definition at line \mbox{\hyperlink{server_8c_source_l00023}{23}} of file \mbox{\hyperlink{server_8c_source}{server.\+c}}.
+

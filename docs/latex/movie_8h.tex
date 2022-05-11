@@ -1,0 +1,113 @@
+\hypertarget{movie_8h}{}\doxysection{src/data/movie.h File Reference}
+\label{movie_8h}\index{src/data/movie.h@{src/data/movie.h}}
+{\ttfamily \#include \char`\"{}../utils/utils.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_movie}{Movie}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{movie_8h_a343f8c6a86456219480f83467c724ccb}{MAX\+\_\+\+MOVIE\+\_\+\+GENRES}}~4
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_movie}{Movie}} $\ast$ \mbox{\hyperlink{movie_8h_adcf6d7d418f95cbf0cc5de590566d4d2}{create\+\_\+movie}} (short id, char $\ast$title, char $\ast$genre, char $\ast$director, short year)
+\begin{DoxyCompactList}\small\item\em Função para criar uma struct movie. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{movie_8h_a95d5422531b8beff977e07d776e792e1}{add\+\_\+genre}} (\mbox{\hyperlink{struct_movie}{Movie}} $\ast$movie, char $\ast$genre)
+\begin{DoxyCompactList}\small\item\em Adiciona um gênero a lista de gêneros do filme. \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{movie_8h_af011b83d27bf1997c2a9eba74d9666b5}{contains\+\_\+genre}} (\mbox{\hyperlink{struct_movie}{Movie}} $\ast$movie, char $\ast$genre)
+\begin{DoxyCompactList}\small\item\em Confere se o gênero está na lista de gêneros. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{movie_8h_a343f8c6a86456219480f83467c724ccb}\label{movie_8h_a343f8c6a86456219480f83467c724ccb}} 
+\index{movie.h@{movie.h}!MAX\_MOVIE\_GENRES@{MAX\_MOVIE\_GENRES}}
+\index{MAX\_MOVIE\_GENRES@{MAX\_MOVIE\_GENRES}!movie.h@{movie.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_MOVIE\_GENRES}{MAX\_MOVIE\_GENRES}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+MOVIE\+\_\+\+GENRES~4}
+
+
+
+Definition at line \mbox{\hyperlink{movie_8h_source_l00006}{6}} of file \mbox{\hyperlink{movie_8h_source}{movie.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{movie_8h_a95d5422531b8beff977e07d776e792e1}\label{movie_8h_a95d5422531b8beff977e07d776e792e1}} 
+\index{movie.h@{movie.h}!add\_genre@{add\_genre}}
+\index{add\_genre@{add\_genre}!movie.h@{movie.h}}
+\doxysubsubsection{\texorpdfstring{add\_genre()}{add\_genre()}}
+{\footnotesize\ttfamily void add\+\_\+genre (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}} $\ast$}]{movie,  }\item[{char $\ast$}]{genre }\end{DoxyParamCaption})}
+
+
+
+Adiciona um gênero a lista de gêneros do filme. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em movie} & Filme a ter um gênero inserido. \\
+\hline
+\mbox{\texttt{ out}}  & {\em genre} & Gênero a ser inserido. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{movie_8c_source_l00032}{32}} of file \mbox{\hyperlink{movie_8c_source}{movie.\+c}}.
+
+\mbox{\Hypertarget{movie_8h_af011b83d27bf1997c2a9eba74d9666b5}\label{movie_8h_af011b83d27bf1997c2a9eba74d9666b5}} 
+\index{movie.h@{movie.h}!contains\_genre@{contains\_genre}}
+\index{contains\_genre@{contains\_genre}!movie.h@{movie.h}}
+\doxysubsubsection{\texorpdfstring{contains\_genre()}{contains\_genre()}}
+{\footnotesize\ttfamily char contains\+\_\+genre (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_movie}{Movie}} $\ast$}]{movie,  }\item[{char $\ast$}]{genre }\end{DoxyParamCaption})}
+
+
+
+Confere se o gênero está na lista de gêneros. 
+
+Usa comparação de strings para determinar se o gênero fornecido está ou não presente no filme. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em movie} & Filme a ser testado. \\
+\hline
+\mbox{\texttt{ out}}  & {\em genre} & Genero a ser procurado \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 caso o filme seja do gênero passado, 0 caso contrário. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{movie_8c_source_l00044}{44}} of file \mbox{\hyperlink{movie_8c_source}{movie.\+c}}.
+
+\mbox{\Hypertarget{movie_8h_adcf6d7d418f95cbf0cc5de590566d4d2}\label{movie_8h_adcf6d7d418f95cbf0cc5de590566d4d2}} 
+\index{movie.h@{movie.h}!create\_movie@{create\_movie}}
+\index{create\_movie@{create\_movie}!movie.h@{movie.h}}
+\doxysubsubsection{\texorpdfstring{create\_movie()}{create\_movie()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_movie}{Movie}} $\ast$ create\+\_\+movie (\begin{DoxyParamCaption}\item[{short}]{id,  }\item[{char $\ast$}]{title,  }\item[{char $\ast$}]{genre,  }\item[{char $\ast$}]{director,  }\item[{short}]{year }\end{DoxyParamCaption})}
+
+
+
+Função para criar uma struct movie. 
+
+Aloca um espaço em memória para a struct e preenche com os dados passados. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & \\
+\hline
+\mbox{\texttt{ out}}  & {\em title} & Título do filme a ser criado. \\
+\hline
+\mbox{\texttt{ out}}  & {\em genre} & Gêneros iniciais para o filme. \\
+\hline
+\mbox{\texttt{ out}}  & {\em director} & Nome do diretor. \\
+\hline
+\mbox{\texttt{ in}}  & {\em year} & Ano de publicação \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ponteiro para a nova struct movie. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{movie_8c_source_l00016}{16}} of file \mbox{\hyperlink{movie_8c_source}{movie.\+c}}.
+

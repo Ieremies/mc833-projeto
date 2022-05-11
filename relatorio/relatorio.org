@@ -44,6 +44,8 @@ No lado do servidor, começamos populando a =struct addrinf= com algumas informa
 
 Caso tudo isso tenha sido feito com êxito, garantimos que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço =while=, aceitamos novas conexões com =accept()= e executamos =handle_client()=, função responsável por agir em vista das requisições do cliente.
 
+É importante perceber que restringimos o tamanho do catálogo e das informações dos filmes para que caibam no datagrama do TCP.
+
 *** Operações do servidor
 O servidor é capaz de servir as seguintes operações:
 - *GET* :: retorna todo o catálogo.

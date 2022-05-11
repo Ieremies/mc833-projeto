@@ -1,0 +1,35 @@
+\hypertarget{net__utils_8h_source}{}\doxysection{net\+\_\+utils.\+h}
+\label{net__utils_8h_source}\index{src/utils/net\_utils.h@{src/utils/net\_utils.h}}
+\mbox{\hyperlink{net__utils_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00001}00001 \textcolor{preprocessor}{\#ifndef MC833\_PROJETO\_NET\_UTILS\_H}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00002}00002 \textcolor{preprocessor}{\#define MC833\_PROJETO\_NET\_UTILS\_H}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00004}00004 \textcolor{preprocessor}{\#include "{}../data/catalog.h"{}}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00005}00005 \textcolor{preprocessor}{\#include "{}../data/movie.h"{}}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00006}00006 \textcolor{preprocessor}{\#include <netinet/in.h>}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00007}00007 \textcolor{preprocessor}{\#include <sys/socket.h>}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00008}00008 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00009}\mbox{\hyperlink{net__utils_8h_a1edd1ea8bddaf4d9c5eb3eae1ee1726a}{00009}} \textcolor{preprocessor}{\#define ALL -\/1}}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00010}00010 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00011}\mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba11563127ec3be864b514a1784c5d37a6}{00011}} \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \{ \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba368c5bc07109370b819193871352b926}{POST}}, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba12a8dcf59c16b5aadfda3a08ba67d529}{GET}}, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bbafec39d40e8bc9e12afa614df5ddb9fa9}{PUT}}, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba11563127ec3be864b514a1784c5d37a6}{DEL}}, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba7a10b5d68d31711288e1fe0fa17dbf4f}{EXIT}} \} \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}{Operation}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00012}00012 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00017}\mbox{\hyperlink{struct_payload}{00017}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00018}\mbox{\hyperlink{struct_payload_af907ef6d33afb0a27d4ac427846d2c1d}{00018}}     \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}{Operation}} \mbox{\hyperlink{struct_payload_af907ef6d33afb0a27d4ac427846d2c1d}{op}}; }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00019}\mbox{\hyperlink{struct_payload_a471de1af049d8fc28384acc55ce5e26a}{00019}}     \mbox{\hyperlink{struct_movie}{Movie}} \mbox{\hyperlink{struct_payload_a471de1af049d8fc28384acc55ce5e26a}{movie}}; }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00020}00020 \} \mbox{\hyperlink{struct_payload}{Payload}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00022}\mbox{\hyperlink{union_catalog_movie}{00022}} \textcolor{keyword}{typedef} \textcolor{keyword}{union }\{}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00023}\mbox{\hyperlink{union_catalog_movie_a5f74d58e4b7b68bbb03cebb78f87f9a8}{00023}}     \mbox{\hyperlink{struct_catalog}{Catalog}} \mbox{\hyperlink{union_catalog_movie_a5f74d58e4b7b68bbb03cebb78f87f9a8}{catalog}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00024}\mbox{\hyperlink{union_catalog_movie_a471de1af049d8fc28384acc55ce5e26a}{00024}}     \mbox{\hyperlink{struct_movie}{Movie}} \mbox{\hyperlink{union_catalog_movie_a471de1af049d8fc28384acc55ce5e26a}{movie}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00025}00025 \} \mbox{\hyperlink{union_catalog_movie}{CatalogMovie}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00031}\mbox{\hyperlink{struct_response}{00031}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00032}\mbox{\hyperlink{struct_response_a6782798bb13b71c74d87d1ad0a7ff714}{00032}}     \mbox{\hyperlink{union_catalog_movie}{CatalogMovie}} \mbox{\hyperlink{struct_response_a6782798bb13b71c74d87d1ad0a7ff714}{data}}; }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00033}00033 \} \mbox{\hyperlink{struct_response}{Response}};}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00035}00035 \textcolor{keywordtype}{void} *\mbox{\hyperlink{net__utils_8h_afbef2c33f6dff3d4bc138b52bf0ad27d}{get\_in\_addr}}(\textcolor{keyword}{struct} sockaddr *sa);}
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{net__utils_8h_source_l00037}00037 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// MC833\_PROJETO\_NET\_UTILS\_H}}
+
+\end{DoxyCode}

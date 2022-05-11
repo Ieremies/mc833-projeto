@@ -1,0 +1,31 @@
+\hypertarget{movie_8c_source}{}\doxysection{movie.\+c}
+\label{movie_8c_source}\index{src/data/movie.c@{src/data/movie.c}}
+\mbox{\hyperlink{movie_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00001}00001 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{movie_8h}{movie.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00002}00002 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00003}00003 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00004}00004 }
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00016}\mbox{\hyperlink{movie_8c_adcf6d7d418f95cbf0cc5de590566d4d2}{00016}} \mbox{\hyperlink{struct_movie}{Movie}} *\mbox{\hyperlink{movie_8c_adcf6d7d418f95cbf0cc5de590566d4d2}{create\_movie}}(\textcolor{keywordtype}{short} \textcolor{keywordtype}{id}, \textcolor{keywordtype}{char} *title, \textcolor{keywordtype}{char} *genre, \textcolor{keywordtype}{char} *director,}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00017}00017                     \textcolor{keywordtype}{short} year) \{}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00018}00018     \mbox{\hyperlink{struct_movie}{Movie}} *\textcolor{keyword}{new} = calloc(1, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{struct_movie}{Movie}}));}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00019}00019     \textcolor{keyword}{new}-\/>id = id; \textcolor{comment}{// TODO acho que temos que mudar esse compostamento}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00020}00020     memcpy(new-\/>title, title, \mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}});}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00021}00021     memcpy(new-\/>genre\_list[new-\/>num\_genres++], genre, \mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}});}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00022}00022     memcpy(new-\/>director\_name, director, \mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}});}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00023}00023     \textcolor{keyword}{new}-\/>year = year;}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00024}00024     \textcolor{keywordflow}{return} \textcolor{keyword}{new};}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00025}00025 \}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00032}\mbox{\hyperlink{movie_8c_a95d5422531b8beff977e07d776e792e1}{00032}} \textcolor{keywordtype}{void} \mbox{\hyperlink{movie_8c_a95d5422531b8beff977e07d776e792e1}{add\_genre}}(\mbox{\hyperlink{struct_movie}{Movie}} *movie, \textcolor{keywordtype}{char} *genre) \{}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00033}00033     memcpy(movie-\/>\mbox{\hyperlink{struct_movie_a2f970c94eb557ea6e1dc550ae8f1ae7c}{genre\_list}}[movie-\/>\mbox{\hyperlink{struct_movie_a9699b02de008443c70801e875a6baa33}{num\_genres}}++], genre, \mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}});}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00034}00034 \}}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00044}\mbox{\hyperlink{movie_8c_af011b83d27bf1997c2a9eba74d9666b5}{00044}} \textcolor{keywordtype}{char} \mbox{\hyperlink{movie_8c_af011b83d27bf1997c2a9eba74d9666b5}{contains\_genre}}(\mbox{\hyperlink{struct_movie}{Movie}} *movie, \textcolor{keywordtype}{char} *genre) \{}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00045}00045     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < movie-\/>\mbox{\hyperlink{struct_movie_a9699b02de008443c70801e875a6baa33}{num\_genres}}; i++)}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00046}00046         \textcolor{keywordflow}{if} (strstr(movie-\/>\mbox{\hyperlink{struct_movie_a2f970c94eb557ea6e1dc550ae8f1ae7c}{genre\_list}}[i], genre))}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00047}00047             \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00048}00048     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\Hypertarget{movie_8c_source_l00049}00049 \}}
+
+\end{DoxyCode}
