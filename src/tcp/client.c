@@ -191,9 +191,12 @@ void list_all_info(Catalog response) {
 /**===========================================================================*/
 Payload (*handlers[])() = {post_movie, put_genre,  get_movies,  get_movies,
                            get_movies, get_movies, remove_movie};
-void (*get_handlers[])(Response) = {NULL,          NULL,
-                                    list_titles,   list_info_by_genre,
-                                    list_all_info, list_info_by_id};
+void (*get_handlers[])(Catalog) = {
+    NULL,
+    NULL,
+    list_titles,
+    list_all_info,
+};
 
 /**
  * @brief Impressão do menu principal para o cliente.
@@ -224,13 +227,21 @@ void send_exit() {
 
 /**
  * @brief Função que aguarda o retorno de operações get.
- * @details Uma vez enviada, a operação GET espera um retorno.
+ * @details Uma vez enviada, a operação GET espera um retorno. Perceba que
+ * podemos tentar ler esse retorno antes de toda a mensagem chegar. Pra isso
+ * repetimos o recv até popular o tamanho necessário
  * @param[in] cmd Qual comando foi enviado.
  */
 void handle_get(char cmd) {
-    Response response;
-    if (recv(SOCKFD, &response, sizeof(Response), 0) == -1)
-        perror("recv");
+    Catalog response;
+    memset(&response, 0, sizeof(Catalog));
+
+    int size = sizeof(int) + sizeof(Movie);
+    int got = recv(SOCKFD, &response, size, 0);
+    size = sizeof(int) + response.size * sizeof(Movie);
+
+    for (; got < size; got = recv(SOCKFD, &response + size, size, 0))
+        ;
     get_handlers[cmd](response);
 }
 
