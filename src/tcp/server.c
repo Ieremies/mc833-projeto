@@ -14,6 +14,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #define PORT "3490" // the port users will be connecting to
@@ -22,6 +23,7 @@
 
 int SOCKFD;      // global to be closed on exit
 Catalog CATALOG; // global to all handlers task
+int START;       // time of server start
 
 void sigchld_handler(int s) {
     (void)s; // quiet unused variable warning
@@ -47,7 +49,11 @@ void sigchld_handler(int s) {
  * @param[in] movie Description
  * @param[in] socket Description
  */
-void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
+void post_movie(Movie movie, int socket) {
+    add_movie(&CATALOG, movie);
+    printf("%d \t added movie (id:%d) - %s", (int)time(NULL) - START, movie.id,
+           movie.title);
+}
 
 /**
  * @brief Função responsável por atualizar as informações de um filme.
@@ -56,7 +62,11 @@ void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
  * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
  * o resto vazio.
  */
-void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
+void put_movie(Movie movie, int socket) {
+    update_movie(&CATALOG, movie);
+    printf("%d \t update movie (id:%d) - %s", (int)time(NULL) - START, movie.id,
+           movie.title);
+}
 
 void send_catalog(Catalog *catalog, int socket) {
     int size = sizeof(int) + catalog->size * sizeof(Movie);
@@ -73,6 +83,8 @@ void get_movie_by_id(int id, int socket) {
             add_movie(&response, CATALOG.movie_list[i]);
 
     send_catalog(&response, socket);
+    printf("%d \t sent info (id:%d) - %s", (int)time(NULL) - START,
+           response.movie_list[0].id, response.movie_list[0].title);
 }
 
 void get_movie_by_genre(char *genre, int socket) {
@@ -84,6 +96,7 @@ void get_movie_by_genre(char *genre, int socket) {
             add_movie(&response, CATALOG.movie_list[i]);
 
     send_catalog(&response, socket);
+    printf("%d \t sent all films of genre %s", (int)time(NULL) - START, genre);
 }
 
 /**
@@ -122,6 +135,7 @@ void handle_client(int socket) {
     Payload payload;
     while (1) {
         // Payload tem tamanho sizeof(int) + sizeof(movie)
+        printf("received");
         if (recv(socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
 
@@ -258,6 +272,7 @@ int main(int argc, char *argv[]) {
     // Make sure the socket will be cleaned:
     signal(SIGINT, sigint_handler);
 
+    START = time(NULL);
     printf("server: waiting for connections...\n");
 
 #pragma omp parallel
