@@ -3,9 +3,9 @@
 
 #include "../utils/utils.h"
 
-#define MAX_MOVIE_GENRES 4
+#define MAX_MOVIE_GENRES 10
 
-/**
+/**catálogo
  * @struct Movie
  * Struct para armazenar as informações referentes a um filme.
  */

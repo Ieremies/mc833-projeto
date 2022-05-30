@@ -30,15 +30,52 @@ void wait_for_enter() {
  * @{
  */
 /**
- * @brief Listar todos os títulos, junto aos seus respectivos identificadores.
+ * @brief Listar todas as informações de todos os títulos.
  * @details
- * @return Struct Payload com as informações a serem colocadas
+ * @return Struct Payload com as informações buscadas
  */
 Payload get_movies() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
     ret.op = GET;
     ret.movie.id = ALL;
+    return ret;
+}
+
+/**
+ * @brief Listar todas as informações de todos os títulos com certo gênero.
+ * @details
+ * @return Struct Payload com as informações buscadas
+ */
+Payload get_movies_by_genre() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = GET;
+
+    system("clear");
+    printf("Digite o gênero: ");
+    ret.movie.num_genres = 1;
+    fgets(ret.movie.genre_list[0], MAX_STR_LEN, stdin);
+    ret.movie.genre_list[0][strcspn(ret.movie.genre_list[0], "\n")] = '\0';
+
+    return ret;
+}
+
+/**
+ * @brief Listar todas as informações de um único filme.
+ * @details
+ * @return Struct Payload com as informações buscadas
+ */
+Payload get_movie() {
+    Payload ret;
+    memset(&ret, 0, sizeof(Payload));
+    ret.op = GET;
+
+    system("clear");
+    printf("Digite o id: ");
+    scanf("%hd", &ret.movie.id);
+    getchar(); // ignores the leading \n
+
     return ret;
 }
 
@@ -135,6 +172,7 @@ Payload remove_movie() {
 /**
  * @}
  */
+
 /**===========================================================================*/
 /**
  * @name Funções de impressão
@@ -150,9 +188,9 @@ void list_titles(Response response) {
     system("clear");
     printf("Lista de filmes:\n");
     printf(" -> id  - título\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        printf(" -> %d - %s\n", response.data.catalog.movie_list[i].id,
-               response.data.catalog.movie_list[i].title);
+    for (int i = 0; i < response.data.size; i++)
+        printf(" -> %d - %s\n", response.data.movie_list[i].id,
+               response.data.movie_list[i].title);
     wait_for_enter();
 }
 
@@ -178,8 +216,8 @@ void list_all_info(Response response) {
     system("clear");
     printf("Informações dos filmes:\n");
     printf(" -> id  - (ano) título by diretor | Gêneros\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        print_all_info(response.data.catalog.movie_list[i]);
+    for (int i = 0; i < response.data.size; i++)
+        print_all_info(response.data.movie_list[i]);
     wait_for_enter();
 }
 
@@ -190,23 +228,13 @@ void list_all_info(Response response) {
  * @param[in] response Resposta do servidor com o catálogo.
  */
 void list_info_by_genre(Response response) {
-    char genre[MAX_STR_LEN];
-    system("clear");
-    printf("Digite o gênero: ");
-    fgets(genre, MAX_STR_LEN, stdin);
-    genre[strcspn(genre, "\n")] = '\0';
-
-    // REVIEW Do jeito que ele colocou na descrição, parecia que ele queria
-    // que essa filtragem fosse feita pelo servidor.
     system("clear");
     printf("Lista de filmes:\n");
     printf(" -> título - nome do diretor - ano\n");
     Movie aux;
-    for (int i = 0; i < response.data.catalog.size; i++) {
-        aux = response.data.catalog.movie_list[i];
-        if (contains_genre(&aux, genre))
-            printf(" -> %s - %s - %d\n", aux.title, aux.director_name,
-                   aux.year);
+    for (int i = 0; i < response.data.size; i++) {
+        aux = response.data.movie_list[i];
+        printf(" -> %s - %s - %d\n", aux.title, aux.director_name, aux.year);
     }
     wait_for_enter();
 }
@@ -218,20 +246,9 @@ void list_info_by_genre(Response response) {
  * @param[in] response Resposta do servidor com o catálogo.
  */
 void list_info_by_id(Response response) {
-    int id;
-    system("clear");
-    printf("Digite o id: ");
-    scanf("%d", &id);
-    getchar(); // ignores the leading \n
-
     system("clear");
     printf(" -> id  - (ano) título by diretor | Gêneros\n");
-    for (int i = 0; i < response.data.catalog.size; i++)
-        if (response.data.catalog.movie_list[i].id == id) {
-            print_all_info(response.data.catalog.movie_list[i]);
-            break;
-        }
-
+    print_all_info(response.data.movie_list[0]);
     wait_for_enter();
 }
 /**
@@ -239,8 +256,9 @@ void list_info_by_id(Response response) {
  */
 
 /**===========================================================================*/
-Payload (*handlers[])() = {post_movie, put_genre,  get_movies,  get_movies,
-                           get_movies, get_movies, remove_movie};
+Payload (*handlers[])() = {post_movie,          put_genre,  get_movies,
+                           get_movies_by_genre, get_movies, get_movie,
+                           remove_movie};
 void (*get_handlers[])(Response) = {NULL,          NULL,
                                     list_titles,   list_info_by_genre,
                                     list_all_info, list_info_by_id};
@@ -279,8 +297,19 @@ void send_exit() {
  */
 void handle_get(char cmd) {
     Response response;
-    if (recv(SOCKFD, &response, sizeof(Response), 0) == -1)
-        perror("recv");
+    char buf[sizeof(Response)];
+    memset(buf, 0, sizeof(Response));
+
+    // Receiving procedure:
+    ssize_t rec = 0, aux;
+    while (rec < sizeof(Response)) {
+        aux = recv(SOCKFD, &buf[rec], sizeof(Response) - rec, 0);
+        if (aux == -1)
+            perror("recv");
+        rec += aux;
+    }
+    memcpy(&response, buf, sizeof(Response));
+
     get_handlers[cmd](response);
 }
 

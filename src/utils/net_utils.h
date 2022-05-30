@@ -19,17 +19,12 @@ typedef struct {
     Movie movie; /**< Informações de filme a serem utilizadas pela operação */
 } Payload;
 
-typedef union {
-    Catalog catalog;
-    Movie movie;
-} CatalogMovie;
-
 /**
  * @struct Response
  * Struct utilizada como respota do servidor.
  */
 typedef struct {
-    CatalogMovie data; /**< Tipo de data a ser retornada. */
+    Catalog data;
 } Response;
 
 void *get_in_addr(struct sockaddr *sa);

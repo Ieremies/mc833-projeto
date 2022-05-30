@@ -16,7 +16,7 @@
 Movie *create_movie(short id, char *title, char *genre, char *director,
                     short year) {
     Movie *new = calloc(1, sizeof(Movie));
-    new->id = id; // TODO acho que temos que mudar esse compostamento
+    new->id = id;
     memcpy(new->title, title, MAX_STR_LEN);
     memcpy(new->genre_list[new->num_genres++], genre, MAX_STR_LEN);
     memcpy(new->director_name, director, MAX_STR_LEN);

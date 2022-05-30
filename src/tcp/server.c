@@ -46,7 +46,7 @@ void sigchld_handler(int s) {
  * @param[in] movie Description
  * @param[in] socket Description
  */
-void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
+void post_movie(Movie *movie, int socket) { add_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por atualizar as informações de um filme.
@@ -55,19 +55,33 @@ void post_movie(Movie movie, int socket) { add_movie(&CATALOG, movie); }
  * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
  * o resto vazio.
  */
-void put_movie(Movie movie, int socket) { update_movie(&CATALOG, movie); }
+void put_movie(Movie *movie, int socket) { update_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por recuperar informações.
- * @details Retorna todo o catálogo e é responsabilidade do client filtrar.
- * @return Struct Resposne com todo o catálogo.
+ * @details Retorna os filmes que atendem os critérios de filtragem.
+ * @return Struct Respos com todo os filmes filtrados.
  */
-void get_movie(Movie movie, int socket) {
+void get_movie(Movie *movie, int socket) {
     Response response;
-    memset(&response, 0, sizeof(Payload));
-    response.data.catalog = CATALOG;
-    if (send(socket, &response, sizeof(Response), 0) == -1)
-        perror("send");
+    char buf[sizeof(Response)];
+
+    memset(&response, 0, sizeof(Response));
+    response.data = CATALOG;
+    if (movie->id != ALL)
+        filter_by_id(&response.data, movie);
+    if (movie->num_genres != 0)
+        filter_by_genres(&response.data, movie);
+    memcpy(buf, &response, sizeof(Response));
+
+    // Sending procedure:
+    ssize_t sent = 0, aux;
+    while (sent < sizeof(Response)) {
+        aux = send(socket, &buf[sent], sizeof(Response) - sent, 0);
+        if (aux == -1)
+            perror("send");
+        sent += aux;
+    }
 }
 
 /**
@@ -76,12 +90,14 @@ void get_movie(Movie movie, int socket) {
  * @param[in] movie Description
  * @param[in] socket Description
  */
-void del_movie(Movie movie, int socket) { delete_movie(&CATALOG, movie); }
+void del_movie(Movie *movie, int socket) { delete_movie(&CATALOG, movie); }
 /**
  * @}
  */
+
 /**===========================================================================*/
-void (*handlers[])(Movie, int) = {post_movie, get_movie, put_movie, del_movie};
+void (*handlers[])(Movie *, int) = {post_movie, get_movie, put_movie,
+                                    del_movie};
 
 /**
  * @brief Função que espera por uma conexão.
@@ -101,7 +117,7 @@ void handle_client(int socket) {
             continue;
         }
 #pragma omp critical(Catalog)
-        handlers[payload.op](payload.movie, socket); // execute the action
+        handlers[payload.op](&payload.movie, socket); // execute the action
     }
 }
 
