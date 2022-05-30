@@ -51,6 +51,7 @@ Payload get_movies_by_genre() {
     Payload ret;
     memset(&ret, 0, sizeof(Payload));
     ret.op = GET;
+    ret.movie.id = ALL;
 
     system("clear");
     printf("Digite o gênero: ");
