@@ -75,9 +75,11 @@ void get_movie(Movie *movie, int socket) {
     memcpy(buf, &response, sizeof(Response));
 
     // Sending procedure:
-    ssize_t sent = 0, aux;
-    while (sent < sizeof(Response)) {
-        aux = send(socket, &buf[sent], sizeof(Response) - sent, 0);
+    size_t aux;
+    size_t sent = 0, total = sizeof(response.data.size) +
+                             response.data.size * sizeof(Movie);
+    while (sent < total) {
+        aux = send(socket, &buf[sent], total - sent, 0);
         if (aux == -1)
             perror("send");
         sent += aux;

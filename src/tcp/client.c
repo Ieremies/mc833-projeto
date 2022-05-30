@@ -302,14 +302,21 @@ void handle_get(char cmd) {
     memset(buf, 0, sizeof(Response));
 
     // Receiving procedure:
-    ssize_t rec = 0, aux;
-    while (rec < sizeof(Response)) {
-        aux = recv(SOCKFD, &buf[rec], sizeof(Response) - rec, 0);
+    // receive the size of the response:
+    ssize_t aux;
+    recv(SOCKFD, &response.data.size, sizeof(response.data.size), 0);
+    if (aux == -1)
+        perror("recv");
+
+    // receive the movie list of the response:
+    size_t rec = 0, total = response.data.size * sizeof(Movie);
+    while (rec < total) {
+        aux = recv(SOCKFD, &buf[rec], total - rec, 0);
         if (aux == -1)
             perror("recv");
         rec += aux;
     }
-    memcpy(&response, buf, sizeof(Response));
+    memcpy(&response.data.movie_list, buf, total);
 
     get_handlers[cmd](response);
 }
