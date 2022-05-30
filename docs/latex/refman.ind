@@ -1,0 +1,283 @@
+\begin{theindex}
+
+  \item {add\_genre}
+    \subitem {movie.c}, \hyperpage{15}
+    \subitem {movie.h}, \hyperpage{18}
+  \item {add\_movie}
+    \subitem {catalog.c}, \hyperpage{11}
+    \subitem {catalog.h}, \hyperpage{14}
+  \item {ALL}
+    \subitem {net\_utils.h}, \hyperpage{39}
+
+  \indexspace
+
+  \item {BACKLOG}
+    \subitem {server.c}, \hyperpage{31}
+  \item {backup}
+    \subitem {server.c}, \hyperpage{31}
+
+  \indexspace
+
+  \item {CATALOG}
+    \subitem {server.c}, \hyperpage{34}
+  \item {Catalog}, \hyperpage{5}
+    \subitem {movie\_list}, \hyperpage{5}
+    \subitem {size}, \hyperpage{5}
+  \item {catalog}
+    \subitem {CatalogMovie}, \hyperpage{6}
+  \item {catalog.c}
+    \subitem {add\_movie}, \hyperpage{11}
+    \subitem {delete\_movie}, \hyperpage{12}
+    \subitem {update\_movie}, \hyperpage{12}
+  \item {catalog.h}
+    \subitem {add\_movie}, \hyperpage{14}
+    \subitem {delete\_movie}, \hyperpage{14}
+    \subitem {MAX\_MOVIES}, \hyperpage{13}
+    \subitem {update\_movie}, \hyperpage{14}
+  \item {CatalogMovie}, \hyperpage{6}
+    \subitem {catalog}, \hyperpage{6}
+    \subitem {movie}, \hyperpage{6}
+  \item {client.c}
+    \subitem {get\_handlers}, \hyperpage{25}
+    \subitem {get\_movies}, \hyperpage{21}
+    \subitem {handle\_get}, \hyperpage{21}
+    \subitem {handle\_user}, \hyperpage{22}
+    \subitem {handlers}, \hyperpage{26}
+    \subitem {list\_all\_info}, \hyperpage{22}
+    \subitem {list\_info\_by\_genre}, \hyperpage{22}
+    \subitem {list\_info\_by\_id}, \hyperpage{22}
+    \subitem {list\_titles}, \hyperpage{23}
+    \subitem {main}, \hyperpage{23}
+    \subitem {PORT}, \hyperpage{21}
+    \subitem {post\_movie}, \hyperpage{23}
+    \subitem {print\_all\_info}, \hyperpage{24}
+    \subitem {print\_menu}, \hyperpage{24}
+    \subitem {put\_genre}, \hyperpage{24}
+    \subitem {remove\_movie}, \hyperpage{24}
+    \subitem {send\_exit}, \hyperpage{25}
+    \subitem {sigint\_handler}, \hyperpage{25}
+    \subitem {SOCKFD}, \hyperpage{26}
+    \subitem {wait\_for\_enter}, \hyperpage{25}
+  \item {contains\_genre}
+    \subitem {movie.c}, \hyperpage{16}
+    \subitem {movie.h}, \hyperpage{18}
+  \item {create\_movie}
+    \subitem {movie.c}, \hyperpage{16}
+    \subitem {movie.h}, \hyperpage{19}
+
+  \indexspace
+
+  \item {data}
+    \subitem {Response}, \hyperpage{10}
+  \item {DEL}
+    \subitem {net\_utils.h}, \hyperpage{39}
+  \item {del\_movie}
+    \subitem {server.c}, \hyperpage{31}
+  \item {delete\_movie}
+    \subitem {catalog.c}, \hyperpage{12}
+    \subitem {catalog.h}, \hyperpage{14}
+  \item {director\_name}
+    \subitem {Movie}, \hyperpage{7}
+
+  \indexspace
+
+  \item {EXIT}
+    \subitem {net\_utils.h}, \hyperpage{39}
+
+  \indexspace
+
+  \item {genre\_list}
+    \subitem {Movie}, \hyperpage{7}
+  \item {GET}
+    \subitem {net\_utils.h}, \hyperpage{39}
+  \item {get\_handlers}
+    \subitem {client.c}, \hyperpage{25}
+  \item {get\_in\_addr}
+    \subitem {net\_utils.c}, \hyperpage{37}
+    \subitem {net\_utils.h}, \hyperpage{39}
+  \item {get\_movie}
+    \subitem {server.c}, \hyperpage{32}
+  \item {get\_movies}
+    \subitem {client.c}, \hyperpage{21}
+
+  \indexspace
+
+  \item {handle\_client}
+    \subitem {server.c}, \hyperpage{32}
+  \item {handle\_get}
+    \subitem {client.c}, \hyperpage{21}
+  \item {handle\_user}
+    \subitem {client.c}, \hyperpage{22}
+  \item {handlers}
+    \subitem {client.c}, \hyperpage{26}
+    \subitem {server.c}, \hyperpage{34}
+
+  \indexspace
+
+  \item {id}
+    \subitem {Movie}, \hyperpage{7}
+
+  \indexspace
+
+  \item {list\_all\_info}
+    \subitem {client.c}, \hyperpage{22}
+  \item {list\_info\_by\_genre}
+    \subitem {client.c}, \hyperpage{22}
+  \item {list\_info\_by\_id}
+    \subitem {client.c}, \hyperpage{22}
+  \item {list\_titles}
+    \subitem {client.c}, \hyperpage{23}
+  \item {load\_backup}
+    \subitem {server.c}, \hyperpage{32}
+
+  \indexspace
+
+  \item {main}
+    \subitem {client.c}, \hyperpage{23}
+    \subitem {server.c}, \hyperpage{33}
+  \item {MAX\_MOVIE\_GENRES}
+    \subitem {movie.h}, \hyperpage{18}
+  \item {MAX\_MOVIES}
+    \subitem {catalog.h}, \hyperpage{13}
+  \item {MAX\_STR\_LEN}
+    \subitem {utils.h}, \hyperpage{40}
+  \item {Movie}, \hyperpage{7}
+    \subitem {director\_name}, \hyperpage{7}
+    \subitem {genre\_list}, \hyperpage{7}
+    \subitem {id}, \hyperpage{7}
+    \subitem {num\_genres}, \hyperpage{8}
+    \subitem {title}, \hyperpage{8}
+    \subitem {year}, \hyperpage{8}
+  \item {movie}
+    \subitem {CatalogMovie}, \hyperpage{6}
+    \subitem {Payload}, \hyperpage{9}
+  \item {movie.c}
+    \subitem {add\_genre}, \hyperpage{15}
+    \subitem {contains\_genre}, \hyperpage{16}
+    \subitem {create\_movie}, \hyperpage{16}
+  \item {movie.h}
+    \subitem {add\_genre}, \hyperpage{18}
+    \subitem {contains\_genre}, \hyperpage{18}
+    \subitem {create\_movie}, \hyperpage{19}
+    \subitem {MAX\_MOVIE\_GENRES}, \hyperpage{18}
+  \item {movie\_list}
+    \subitem {Catalog}, \hyperpage{5}
+
+  \indexspace
+
+  \item {net\_utils.c}
+    \subitem {get\_in\_addr}, \hyperpage{37}
+  \item {net\_utils.h}
+    \subitem {ALL}, \hyperpage{39}
+    \subitem {DEL}, \hyperpage{39}
+    \subitem {EXIT}, \hyperpage{39}
+    \subitem {GET}, \hyperpage{39}
+    \subitem {get\_in\_addr}, \hyperpage{39}
+    \subitem {Operation}, \hyperpage{39}
+    \subitem {POST}, \hyperpage{39}
+    \subitem {PUT}, \hyperpage{39}
+  \item {num\_genres}
+    \subitem {Movie}, \hyperpage{8}
+
+  \indexspace
+
+  \item {op}
+    \subitem {Payload}, \hyperpage{9}
+  \item {Operation}
+    \subitem {net\_utils.h}, \hyperpage{39}
+
+  \indexspace
+
+  \item {Payload}, \hyperpage{8}
+    \subitem {movie}, \hyperpage{9}
+    \subitem {op}, \hyperpage{9}
+  \item {PORT}
+    \subitem {client.c}, \hyperpage{21}
+    \subitem {server.c}, \hyperpage{31}
+  \item {POST}
+    \subitem {net\_utils.h}, \hyperpage{39}
+  \item {post\_movie}
+    \subitem {client.c}, \hyperpage{23}
+    \subitem {server.c}, \hyperpage{33}
+  \item {print\_all\_info}
+    \subitem {client.c}, \hyperpage{24}
+  \item {print\_menu}
+    \subitem {client.c}, \hyperpage{24}
+  \item {PUT}
+    \subitem {net\_utils.h}, \hyperpage{39}
+  \item {put\_genre}
+    \subitem {client.c}, \hyperpage{24}
+  \item {put\_movie}
+    \subitem {server.c}, \hyperpage{33}
+
+  \indexspace
+
+  \item {remove\_movie}
+    \subitem {client.c}, \hyperpage{24}
+  \item {Response}, \hyperpage{9}
+    \subitem {data}, \hyperpage{10}
+
+  \indexspace
+
+  \item {send\_exit}
+    \subitem {client.c}, \hyperpage{25}
+  \item {server.c}
+    \subitem {BACKLOG}, \hyperpage{31}
+    \subitem {backup}, \hyperpage{31}
+    \subitem {CATALOG}, \hyperpage{34}
+    \subitem {del\_movie}, \hyperpage{31}
+    \subitem {get\_movie}, \hyperpage{32}
+    \subitem {handle\_client}, \hyperpage{32}
+    \subitem {handlers}, \hyperpage{34}
+    \subitem {load\_backup}, \hyperpage{32}
+    \subitem {main}, \hyperpage{33}
+    \subitem {PORT}, \hyperpage{31}
+    \subitem {post\_movie}, \hyperpage{33}
+    \subitem {put\_movie}, \hyperpage{33}
+    \subitem {sigchld\_handler}, \hyperpage{34}
+    \subitem {sigint\_handler}, \hyperpage{34}
+    \subitem {SOCKFD}, \hyperpage{34}
+  \item {sigchld\_handler}
+    \subitem {server.c}, \hyperpage{34}
+  \item {sigint\_handler}
+    \subitem {client.c}, \hyperpage{25}
+    \subitem {server.c}, \hyperpage{34}
+  \item {size}
+    \subitem {Catalog}, \hyperpage{5}
+  \item {SOCKFD}
+    \subitem {client.c}, \hyperpage{26}
+    \subitem {server.c}, \hyperpage{34}
+  \item {src/data/catalog.c}, \hyperpage{11, 12}
+  \item {src/data/catalog.h}, \hyperpage{13}, \hyperpage{15}
+  \item {src/data/movie.c}, \hyperpage{15}, \hyperpage{17}
+  \item {src/data/movie.h}, \hyperpage{17}, \hyperpage{19}
+  \item {src/tcp/client.c}, \hyperpage{20}, \hyperpage{26}
+  \item {src/tcp/server.c}, \hyperpage{30}, \hyperpage{35}
+  \item {src/utils/net\_utils.c}, \hyperpage{37, 38}
+  \item {src/utils/net\_utils.h}, \hyperpage{38}, \hyperpage{40}
+  \item {src/utils/utils.h}, \hyperpage{40, 41}
+
+  \indexspace
+
+  \item {title}
+    \subitem {Movie}, \hyperpage{8}
+
+  \indexspace
+
+  \item {update\_movie}
+    \subitem {catalog.c}, \hyperpage{12}
+    \subitem {catalog.h}, \hyperpage{14}
+  \item {utils.h}
+    \subitem {MAX\_STR\_LEN}, \hyperpage{40}
+
+  \indexspace
+
+  \item {wait\_for\_enter}
+    \subitem {client.c}, \hyperpage{25}
+
+  \indexspace
+
+  \item {year}
+    \subitem {Movie}, \hyperpage{8}
+
+\end{theindex}

@@ -5,6 +5,8 @@
 * Introdução
 Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
 
+Esse relatório tem por objetivo descrever o processo e as decisões. Para a documentação mais técnica, referencia-se aos arquivos fonte, ou de forma online no site [[https://ieremies.dev/mc833-projeto/html/]] ou via [[https://ieremies.dev/mc833-projeto/latex/refman.pdf][pdf]].
+
 * Descrição
 Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento de tais fica a cargo do cliente.
 
@@ -43,6 +45,8 @@ Para armazenar uma lista de filmes, possuímos a =struct Catalog= definida no ar
 No lado do servidor, começamos populando a =struct addrinf= com algumas informações e passando-a para a função =getaddrinfo()= que nos retorna uma lista ligada de IP's disponíveis. Como indicado pelo tutorial fornecido, iteramos pelas possibilidades recuperando o socket descriptor, conferimos se está totalmente livre para ser utilizado com =setsockopt= e nos conectamos ao primeiro disponível com =bind()=.
 
 Caso tudo isso tenha sido feito com êxito, garantimos que processos zombies serão tratados e avisar que o socket será limpo, antes de, finalmente, começar a escutar por conexões. No laço =while=, aceitamos novas conexões com =accept()= e executamos =handle_client()=, função responsável por agir em vista das requisições do cliente.
+
+É importante perceber que restringimos o tamanho do catálogo e das informações dos filmes para que caibam no datagrama do TCP.
 
 *** Operações do servidor
 O servidor é capaz de servir as seguintes operações:

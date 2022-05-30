@@ -1,0 +1,110 @@
+\hypertarget{net__utils_8h}{}\doxysection{src/utils/net\+\_\+utils.h File Reference}
+\label{net__utils_8h}\index{src/utils/net\_utils.h@{src/utils/net\_utils.h}}
+{\ttfamily \#include \char`\"{}../data/catalog.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../data/movie.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_payload}{Payload}}
+\item 
+union \mbox{\hyperlink{union_catalog_movie}{Catalog\+Movie}}
+\item 
+struct \mbox{\hyperlink{struct_response}{Response}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{net__utils_8h_a1edd1ea8bddaf4d9c5eb3eae1ee1726a}{ALL}}~-\/1
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}{Operation}} \{ \newline
+\mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba368c5bc07109370b819193871352b926}{POST}}
+, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba12a8dcf59c16b5aadfda3a08ba67d529}{GET}}
+, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bbafec39d40e8bc9e12afa614df5ddb9fa9}{PUT}}
+, \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba11563127ec3be864b514a1784c5d37a6}{DEL}}
+, \newline
+\mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba7a10b5d68d31711288e1fe0fa17dbf4f}{EXIT}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \mbox{\hyperlink{net__utils_8h_afbef2c33f6dff3d4bc138b52bf0ad27d}{get\+\_\+in\+\_\+addr}} (struct sockaddr $\ast$sa)
+\begin{DoxyCompactList}\small\item\em Retorna o endereço do socket, IPv4 ou IPv6. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{net__utils_8h_a1edd1ea8bddaf4d9c5eb3eae1ee1726a}\label{net__utils_8h_a1edd1ea8bddaf4d9c5eb3eae1ee1726a}} 
+\index{net\_utils.h@{net\_utils.h}!ALL@{ALL}}
+\index{ALL@{ALL}!net\_utils.h@{net\_utils.h}}
+\doxysubsubsection{\texorpdfstring{ALL}{ALL}}
+{\footnotesize\ttfamily \#define ALL~-\/1}
+
+
+
+Definition at line \mbox{\hyperlink{net__utils_8h_source_l00009}{9}} of file \mbox{\hyperlink{net__utils_8h_source}{net\+\_\+utils.\+h}}.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}} 
+\index{net\_utils.h@{net\_utils.h}!Operation@{Operation}}
+\index{Operation@{Operation}!net\_utils.h@{net\_utils.h}}
+\doxysubsubsection{\texorpdfstring{Operation}{Operation}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bb}{Operation}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{POST@{POST}!net\_utils.h@{net\_utils.h}}\index{net\_utils.h@{net\_utils.h}!POST@{POST}}}\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba368c5bc07109370b819193871352b926}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba368c5bc07109370b819193871352b926}} 
+POST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GET@{GET}!net\_utils.h@{net\_utils.h}}\index{net\_utils.h@{net\_utils.h}!GET@{GET}}}\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba12a8dcf59c16b5aadfda3a08ba67d529}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba12a8dcf59c16b5aadfda3a08ba67d529}} 
+GET&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PUT@{PUT}!net\_utils.h@{net\_utils.h}}\index{net\_utils.h@{net\_utils.h}!PUT@{PUT}}}\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bbafec39d40e8bc9e12afa614df5ddb9fa9}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bbafec39d40e8bc9e12afa614df5ddb9fa9}} 
+PUT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DEL@{DEL}!net\_utils.h@{net\_utils.h}}\index{net\_utils.h@{net\_utils.h}!DEL@{DEL}}}\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba11563127ec3be864b514a1784c5d37a6}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba11563127ec3be864b514a1784c5d37a6}} 
+DEL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EXIT@{EXIT}!net\_utils.h@{net\_utils.h}}\index{net\_utils.h@{net\_utils.h}!EXIT@{EXIT}}}\mbox{\Hypertarget{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba7a10b5d68d31711288e1fe0fa17dbf4f}\label{net__utils_8h_aa8f137f19095e0bdcf4f521e901f88bba7a10b5d68d31711288e1fe0fa17dbf4f}} 
+EXIT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{net__utils_8h_source_l00011}{11}} of file \mbox{\hyperlink{net__utils_8h_source}{net\+\_\+utils.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{net__utils_8h_afbef2c33f6dff3d4bc138b52bf0ad27d}\label{net__utils_8h_afbef2c33f6dff3d4bc138b52bf0ad27d}} 
+\index{net\_utils.h@{net\_utils.h}!get\_in\_addr@{get\_in\_addr}}
+\index{get\_in\_addr@{get\_in\_addr}!net\_utils.h@{net\_utils.h}}
+\doxysubsubsection{\texorpdfstring{get\_in\_addr()}{get\_in\_addr()}}
+{\footnotesize\ttfamily void $\ast$ get\+\_\+in\+\_\+addr (\begin{DoxyParamCaption}\item[{struct sockaddr $\ast$}]{sa }\end{DoxyParamCaption})}
+
+
+
+Retorna o endereço do socket, IPv4 ou IPv6. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em sa} & FIXME Description \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+FIXME ? 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{net__utils_8c_source_l00010}{10}} of file \mbox{\hyperlink{net__utils_8c_source}{net\+\_\+utils.\+c}}.
+

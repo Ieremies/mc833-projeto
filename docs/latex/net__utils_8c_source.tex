@@ -1,0 +1,15 @@
+\hypertarget{net__utils_8c_source}{}\doxysection{net\+\_\+utils.\+c}
+\label{net__utils_8c_source}\index{src/utils/net\_utils.c@{src/utils/net\_utils.c}}
+\mbox{\hyperlink{net__utils_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00001}00001 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{net__utils_8h}{net\_utils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00002}00002 }
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00003}00003 \textcolor{comment}{// Get sockaddr, IPv4 or IPv6:}}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00004}00004 }
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00010}\mbox{\hyperlink{net__utils_8c_afbef2c33f6dff3d4bc138b52bf0ad27d}{00010}} \textcolor{keywordtype}{void} *\mbox{\hyperlink{net__utils_8c_afbef2c33f6dff3d4bc138b52bf0ad27d}{get\_in\_addr}}(\textcolor{keyword}{struct} sockaddr *sa) \{}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00011}00011     \textcolor{keywordflow}{if} (sa-\/>sa\_family == AF\_INET)}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00012}00012         \textcolor{keywordflow}{return} \&(((\textcolor{keyword}{struct }sockaddr\_in *)sa)-\/>sin\_addr);}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00013}00013     \textcolor{keywordflow}{return} \&(((\textcolor{keyword}{struct }sockaddr\_in6 *)sa)-\/>sin6\_addr);}
+\DoxyCodeLine{\Hypertarget{net__utils_8c_source_l00014}00014 \}}
+
+\end{DoxyCode}

@@ -1,0 +1,28 @@
+\hypertarget{movie_8h_source}{}\doxysection{movie.\+h}
+\label{movie_8h_source}\index{src/data/movie.h@{src/data/movie.h}}
+\mbox{\hyperlink{movie_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00001}00001 \textcolor{preprocessor}{\#ifndef MC833\_PROJETO\_MOVIE\_H}}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00002}00002 \textcolor{preprocessor}{\#define MC833\_PROJETO\_MOVIE\_H}}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00004}00004 \textcolor{preprocessor}{\#include "{}../utils/utils.h"{}}}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00005}00005 }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00006}\mbox{\hyperlink{movie_8h_a343f8c6a86456219480f83467c724ccb}{00006}} \textcolor{preprocessor}{\#define MAX\_MOVIE\_GENRES 4}}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00007}00007 }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00012}\mbox{\hyperlink{struct_movie}{00012}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00013}\mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{00013}}     \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{id}};                                       }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00014}\mbox{\hyperlink{struct_movie_a4f94ddb0d7d4db4e7c4199f2ea6abd3c}{00014}}     \textcolor{keywordtype}{char} title[\mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}}];                        }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00015}\mbox{\hyperlink{struct_movie_a9699b02de008443c70801e875a6baa33}{00015}}     \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_movie_a9699b02de008443c70801e875a6baa33}{num\_genres}};                               }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00016}\mbox{\hyperlink{struct_movie_a2f970c94eb557ea6e1dc550ae8f1ae7c}{00016}}     \textcolor{keywordtype}{char} genre\_list[\mbox{\hyperlink{movie_8h_a343f8c6a86456219480f83467c724ccb}{MAX\_MOVIE\_GENRES}}][\mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}}]; }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00017}\mbox{\hyperlink{struct_movie_a8d7dfedb0e6778db9a5db9c66123f26d}{00017}}     \textcolor{keywordtype}{char} director\_name[\mbox{\hyperlink{utils_8h_a58ce36916c399104e18d32ff090f21c6}{MAX\_STR\_LEN}}];                }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00018}\mbox{\hyperlink{struct_movie_a35b152d1a02d772d6aa41d1f5904c81c}{00018}}     \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_movie_a35b152d1a02d772d6aa41d1f5904c81c}{year}};                                     }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00019}00019     \textcolor{comment}{// imagem capa;                                 /**< Description */}}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00020}00020 \} \mbox{\hyperlink{struct_movie}{Movie}};}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00022}00022 \mbox{\hyperlink{struct_movie}{Movie}} *\mbox{\hyperlink{movie_8h_adcf6d7d418f95cbf0cc5de590566d4d2}{create\_movie}}(\textcolor{keywordtype}{short} \textcolor{keywordtype}{id}, \textcolor{keywordtype}{char} *title, \textcolor{keywordtype}{char} *genre, \textcolor{keywordtype}{char} *director, \textcolor{keywordtype}{short} year);}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00023}00023 \textcolor{keywordtype}{void} \mbox{\hyperlink{movie_8h_a95d5422531b8beff977e07d776e792e1}{add\_genre}}(\mbox{\hyperlink{struct_movie}{Movie}} *movie, \textcolor{keywordtype}{char} *genre);}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00024}00024 \textcolor{keywordtype}{char} \mbox{\hyperlink{movie_8h_af011b83d27bf1997c2a9eba74d9666b5}{contains\_genre}}(\mbox{\hyperlink{struct_movie}{Movie}} *movie, \textcolor{keywordtype}{char} *genre);}
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00025}00025 }
+\DoxyCodeLine{\Hypertarget{movie_8h_source_l00026}00026 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// MC833\_PROJETO\_MOVIE\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,125 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\contentsline {chapter}{\numberline {1}Data Structure Index}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Data Structures}{1}{section.1.1}%
+\contentsline {chapter}{\numberline {2}File Index}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}File List}{3}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Data Structure Documentation}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Catalog Struct Reference}{5}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Detailed Description}{5}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Field Documentation}{5}{subsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2.1}movie\_list}{5}{subsubsection.3.1.2.1}%
+\contentsline {subsubsection}{\numberline {3.1.2.2}size}{6}{subsubsection.3.1.2.2}%
+\contentsline {section}{\numberline {3.2}Catalog\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Movie Union Reference}{6}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Detailed Description}{6}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Field Documentation}{6}{subsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.1}catalog}{6}{subsubsection.3.2.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2.2}movie}{6}{subsubsection.3.2.2.2}%
+\contentsline {section}{\numberline {3.3}Movie Struct Reference}{7}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Detailed Description}{7}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Field Documentation}{7}{subsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.2.1}director\_name}{7}{subsubsection.3.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.3.2.2}genre\_list}{7}{subsubsection.3.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.3.2.3}id}{8}{subsubsection.3.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.3.2.4}num\_genres}{8}{subsubsection.3.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.3.2.5}title}{8}{subsubsection.3.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.3.2.6}year}{8}{subsubsection.3.3.2.6}%
+\contentsline {section}{\numberline {3.4}Payload Struct Reference}{8}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Detailed Description}{9}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Field Documentation}{9}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.1}movie}{9}{subsubsection.3.4.2.1}%
+\contentsline {subsubsection}{\numberline {3.4.2.2}op}{9}{subsubsection.3.4.2.2}%
+\contentsline {section}{\numberline {3.5}Response Struct Reference}{9}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Detailed Description}{10}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Field Documentation}{10}{subsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.2.1}data}{10}{subsubsection.3.5.2.1}%
+\contentsline {chapter}{\numberline {4}File Documentation}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}src/data/catalog.c File Reference}{11}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Function Documentation}{11}{subsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.1}add\_movie()}{11}{subsubsection.4.1.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.2}delete\_movie()}{12}{subsubsection.4.1.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.1.3}update\_movie()}{12}{subsubsection.4.1.1.3}%
+\contentsline {section}{\numberline {4.2}catalog.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{12}{section.4.2}%
+\contentsline {section}{\numberline {4.3}src/data/catalog.h File Reference}{13}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Macro Definition Documentation}{13}{subsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.1.1}MAX\_MOVIES}{13}{subsubsection.4.3.1.1}%
+\contentsline {subsection}{\numberline {4.3.2}Function Documentation}{14}{subsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.1}add\_movie()}{14}{subsubsection.4.3.2.1}%
+\contentsline {subsubsection}{\numberline {4.3.2.2}delete\_movie()}{14}{subsubsection.4.3.2.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.3}update\_movie()}{14}{subsubsection.4.3.2.3}%
+\contentsline {section}{\numberline {4.4}catalog.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{15}{section.4.4}%
+\contentsline {section}{\numberline {4.5}src/data/movie.c File Reference}{15}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Function Documentation}{15}{subsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.1.1}add\_genre()}{15}{subsubsection.4.5.1.1}%
+\contentsline {subsubsection}{\numberline {4.5.1.2}contains\_genre()}{16}{subsubsection.4.5.1.2}%
+\contentsline {subsubsection}{\numberline {4.5.1.3}create\_movie()}{16}{subsubsection.4.5.1.3}%
+\contentsline {section}{\numberline {4.6}movie.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{17}{section.4.6}%
+\contentsline {section}{\numberline {4.7}src/data/movie.h File Reference}{17}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Macro Definition Documentation}{18}{subsection.4.7.1}%
+\contentsline {subsubsection}{\numberline {4.7.1.1}MAX\_MOVIE\_GENRES}{18}{subsubsection.4.7.1.1}%
+\contentsline {subsection}{\numberline {4.7.2}Function Documentation}{18}{subsection.4.7.2}%
+\contentsline {subsubsection}{\numberline {4.7.2.1}add\_genre()}{18}{subsubsection.4.7.2.1}%
+\contentsline {subsubsection}{\numberline {4.7.2.2}contains\_genre()}{18}{subsubsection.4.7.2.2}%
+\contentsline {subsubsection}{\numberline {4.7.2.3}create\_movie()}{19}{subsubsection.4.7.2.3}%
+\contentsline {section}{\numberline {4.8}movie.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{19}{section.4.8}%
+\contentsline {section}{\numberline {4.9}src/tcp/client.c File Reference}{20}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Macro Definition Documentation}{21}{subsection.4.9.1}%
+\contentsline {subsubsection}{\numberline {4.9.1.1}PORT}{21}{subsubsection.4.9.1.1}%
+\contentsline {subsection}{\numberline {4.9.2}Function Documentation}{21}{subsection.4.9.2}%
+\contentsline {subsubsection}{\numberline {4.9.2.1}get\_movies()}{21}{subsubsection.4.9.2.1}%
+\contentsline {subsubsection}{\numberline {4.9.2.2}handle\_get()}{21}{subsubsection.4.9.2.2}%
+\contentsline {subsubsection}{\numberline {4.9.2.3}handle\_user()}{22}{subsubsection.4.9.2.3}%
+\contentsline {subsubsection}{\numberline {4.9.2.4}list\_all\_info()}{22}{subsubsection.4.9.2.4}%
+\contentsline {subsubsection}{\numberline {4.9.2.5}list\_info\_by\_genre()}{22}{subsubsection.4.9.2.5}%
+\contentsline {subsubsection}{\numberline {4.9.2.6}list\_info\_by\_id()}{23}{subsubsection.4.9.2.6}%
+\contentsline {subsubsection}{\numberline {4.9.2.7}list\_titles()}{23}{subsubsection.4.9.2.7}%
+\contentsline {subsubsection}{\numberline {4.9.2.8}main()}{23}{subsubsection.4.9.2.8}%
+\contentsline {subsubsection}{\numberline {4.9.2.9}post\_movie()}{23}{subsubsection.4.9.2.9}%
+\contentsline {subsubsection}{\numberline {4.9.2.10}print\_all\_info()}{24}{subsubsection.4.9.2.10}%
+\contentsline {subsubsection}{\numberline {4.9.2.11}print\_menu()}{24}{subsubsection.4.9.2.11}%
+\contentsline {subsubsection}{\numberline {4.9.2.12}put\_genre()}{24}{subsubsection.4.9.2.12}%
+\contentsline {subsubsection}{\numberline {4.9.2.13}remove\_movie()}{25}{subsubsection.4.9.2.13}%
+\contentsline {subsubsection}{\numberline {4.9.2.14}send\_exit()}{25}{subsubsection.4.9.2.14}%
+\contentsline {subsubsection}{\numberline {4.9.2.15}sigint\_handler()}{25}{subsubsection.4.9.2.15}%
+\contentsline {subsubsection}{\numberline {4.9.2.16}wait\_for\_enter()}{25}{subsubsection.4.9.2.16}%
+\contentsline {subsection}{\numberline {4.9.3}Variable Documentation}{25}{subsection.4.9.3}%
+\contentsline {subsubsection}{\numberline {4.9.3.1}get\_handlers}{26}{subsubsection.4.9.3.1}%
+\contentsline {subsubsection}{\numberline {4.9.3.2}handlers}{26}{subsubsection.4.9.3.2}%
+\contentsline {subsubsection}{\numberline {4.9.3.3}SOCKFD}{26}{subsubsection.4.9.3.3}%
+\contentsline {section}{\numberline {4.10}client.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{26}{section.4.10}%
+\contentsline {section}{\numberline {4.11}src/tcp/server.c File Reference}{30}{section.4.11}%
+\contentsline {subsection}{\numberline {4.11.1}Macro Definition Documentation}{31}{subsection.4.11.1}%
+\contentsline {subsubsection}{\numberline {4.11.1.1}BACKLOG}{31}{subsubsection.4.11.1.1}%
+\contentsline {subsubsection}{\numberline {4.11.1.2}PORT}{31}{subsubsection.4.11.1.2}%
+\contentsline {subsection}{\numberline {4.11.2}Function Documentation}{31}{subsection.4.11.2}%
+\contentsline {subsubsection}{\numberline {4.11.2.1}backup()}{31}{subsubsection.4.11.2.1}%
+\contentsline {subsubsection}{\numberline {4.11.2.2}del\_movie()}{31}{subsubsection.4.11.2.2}%
+\contentsline {subsubsection}{\numberline {4.11.2.3}get\_movie()}{32}{subsubsection.4.11.2.3}%
+\contentsline {subsubsection}{\numberline {4.11.2.4}handle\_client()}{32}{subsubsection.4.11.2.4}%
+\contentsline {subsubsection}{\numberline {4.11.2.5}load\_backup()}{32}{subsubsection.4.11.2.5}%
+\contentsline {subsubsection}{\numberline {4.11.2.6}main()}{33}{subsubsection.4.11.2.6}%
+\contentsline {subsubsection}{\numberline {4.11.2.7}post\_movie()}{33}{subsubsection.4.11.2.7}%
+\contentsline {subsubsection}{\numberline {4.11.2.8}put\_movie()}{33}{subsubsection.4.11.2.8}%
+\contentsline {subsubsection}{\numberline {4.11.2.9}sigchld\_handler()}{34}{subsubsection.4.11.2.9}%
+\contentsline {subsubsection}{\numberline {4.11.2.10}sigint\_handler()}{34}{subsubsection.4.11.2.10}%
+\contentsline {subsection}{\numberline {4.11.3}Variable Documentation}{34}{subsection.4.11.3}%
+\contentsline {subsubsection}{\numberline {4.11.3.1}CATALOG}{34}{subsubsection.4.11.3.1}%
+\contentsline {subsubsection}{\numberline {4.11.3.2}handlers}{34}{subsubsection.4.11.3.2}%
+\contentsline {subsubsection}{\numberline {4.11.3.3}SOCKFD}{35}{subsubsection.4.11.3.3}%
+\contentsline {section}{\numberline {4.12}server.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{35}{section.4.12}%
+\contentsline {section}{\numberline {4.13}src/utils/net\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.c File Reference}{37}{section.4.13}%
+\contentsline {subsection}{\numberline {4.13.1}Function Documentation}{37}{subsection.4.13.1}%
+\contentsline {subsubsection}{\numberline {4.13.1.1}get\_in\_addr()}{37}{subsubsection.4.13.1.1}%
+\contentsline {section}{\numberline {4.14}net\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{38}{section.4.14}%
+\contentsline {section}{\numberline {4.15}src/utils/net\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.h File Reference}{38}{section.4.15}%
+\contentsline {subsection}{\numberline {4.15.1}Macro Definition Documentation}{39}{subsection.4.15.1}%
+\contentsline {subsubsection}{\numberline {4.15.1.1}ALL}{39}{subsubsection.4.15.1.1}%
+\contentsline {subsection}{\numberline {4.15.2}Enumeration Type Documentation}{39}{subsection.4.15.2}%
+\contentsline {subsubsection}{\numberline {4.15.2.1}Operation}{39}{subsubsection.4.15.2.1}%
+\contentsline {subsection}{\numberline {4.15.3}Function Documentation}{39}{subsection.4.15.3}%
+\contentsline {subsubsection}{\numberline {4.15.3.1}get\_in\_addr()}{39}{subsubsection.4.15.3.1}%
+\contentsline {section}{\numberline {4.16}net\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{40}{section.4.16}%
+\contentsline {section}{\numberline {4.17}src/utils/utils.h File Reference}{40}{section.4.17}%
+\contentsline {subsection}{\numberline {4.17.1}Macro Definition Documentation}{40}{subsection.4.17.1}%
+\contentsline {subsubsection}{\numberline {4.17.1.1}MAX\_STR\_LEN}{40}{subsubsection.4.17.1.1}%
+\contentsline {section}{\numberline {4.18}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{41}{section.4.18}%
+\contentsline {chapter}{Index}{43}{section*.26}%

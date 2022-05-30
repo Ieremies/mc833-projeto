@@ -1,0 +1,31 @@
+\hypertarget{catalog_8c_source}{}\doxysection{catalog.\+c}
+\label{catalog_8c_source}\index{src/data/catalog.c@{src/data/catalog.c}}
+\mbox{\hyperlink{catalog_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00001}00001 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{catalog_8h}{catalog.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00002}00002 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00010}\mbox{\hyperlink{catalog_8c_a4a9814f1dc6f9ef737d578702dea723a}{00010}} \textcolor{keywordtype}{void} \mbox{\hyperlink{catalog_8c_a4a9814f1dc6f9ef737d578702dea723a}{add\_movie}}(\mbox{\hyperlink{struct_catalog}{Catalog}} *catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie) \{}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00011}00011     \textcolor{keywordflow}{if} (catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}} < \mbox{\hyperlink{catalog_8h_ad120ac7dea236174ea91ee2f1cf3fd34}{MAX\_MOVIES}})}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00012}00012         catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}}++] = movie;}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00013}00013 \}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00014}00014 }
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00023}\mbox{\hyperlink{catalog_8c_a25589e4bb85d7ffddc2f64af35e05a23}{00023}} \textcolor{keywordtype}{void} \mbox{\hyperlink{catalog_8c_a25589e4bb85d7ffddc2f64af35e05a23}{update\_movie}}(\mbox{\hyperlink{struct_catalog}{Catalog}} *catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie) \{}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00024}00024     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}}; i++)}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00025}00025         \textcolor{keywordflow}{if} (movie.\mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{id}} == catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[i].\mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{id}}) \{}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00026}00026             \mbox{\hyperlink{movie_8c_a95d5422531b8beff977e07d776e792e1}{add\_genre}}(\&catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[i], movie.\mbox{\hyperlink{struct_movie_a2f970c94eb557ea6e1dc550ae8f1ae7c}{genre\_list}}[0]);}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00027}00027             \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00028}00028         \}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00029}00029 \}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00030}00030 }
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00037}\mbox{\hyperlink{catalog_8c_a0d039ce4574947f75061591fa2652f74}{00037}} \textcolor{keywordtype}{void} \mbox{\hyperlink{catalog_8c_a0d039ce4574947f75061591fa2652f74}{delete\_movie}}(\mbox{\hyperlink{struct_catalog}{Catalog}} *catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie) \{}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00038}00038     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}}; i++)}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00039}00039         \textcolor{keywordflow}{if} (movie.\mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{id}} == catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[i].\mbox{\hyperlink{struct_movie_afc3e389b26a8fb3c1e864175ddd630fd}{id}}) \{}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00040}00040             memcpy(\&catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[i], \&catalog-\/>\mbox{\hyperlink{struct_catalog_acaad5bf9e4765be213c492aab5e9efa7}{movie\_list}}[i + 1],}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00041}00041                    (catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}} -\/ i -\/ 1) * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{struct_movie}{Movie}}));}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00042}00042             catalog-\/>\mbox{\hyperlink{struct_catalog_afe96fc30338a75db1f9c7c0412b549b6}{size}}-\/-\/;}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00043}00043             \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00044}00044         \}}
+\DoxyCodeLine{\Hypertarget{catalog_8c_source_l00045}00045 \}}
+
+\end{DoxyCode}

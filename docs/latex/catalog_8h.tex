@@ -1,0 +1,101 @@
+\hypertarget{catalog_8h}{}\doxysection{src/data/catalog.h File Reference}
+\label{catalog_8h}\index{src/data/catalog.h@{src/data/catalog.h}}
+{\ttfamily \#include \char`\"{}movie.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_catalog}{Catalog}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{catalog_8h_ad120ac7dea236174ea91ee2f1cf3fd34}{MAX\+\_\+\+MOVIES}}~20
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{catalog_8h_a4a9814f1dc6f9ef737d578702dea723a}{add\+\_\+movie}} (\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie)
+\begin{DoxyCompactList}\small\item\em Função para adicionar um filme a um catálogo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{catalog_8h_a25589e4bb85d7ffddc2f64af35e05a23}{update\+\_\+movie}} (\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie)
+\begin{DoxyCompactList}\small\item\em Modifica um filme no catálogo com as informações passadas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{catalog_8h_a0d039ce4574947f75061591fa2652f74}{delete\+\_\+movie}} (\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$catalog, \mbox{\hyperlink{struct_movie}{Movie}} movie)
+\begin{DoxyCompactList}\small\item\em Deleta um movie baseado no seu ID. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{catalog_8h_ad120ac7dea236174ea91ee2f1cf3fd34}\label{catalog_8h_ad120ac7dea236174ea91ee2f1cf3fd34}} 
+\index{catalog.h@{catalog.h}!MAX\_MOVIES@{MAX\_MOVIES}}
+\index{MAX\_MOVIES@{MAX\_MOVIES}!catalog.h@{catalog.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_MOVIES}{MAX\_MOVIES}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+MOVIES~20}
+
+
+
+Definition at line \mbox{\hyperlink{catalog_8h_source_l00006}{6}} of file \mbox{\hyperlink{catalog_8h_source}{catalog.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{catalog_8h_a4a9814f1dc6f9ef737d578702dea723a}\label{catalog_8h_a4a9814f1dc6f9ef737d578702dea723a}} 
+\index{catalog.h@{catalog.h}!add\_movie@{add\_movie}}
+\index{add\_movie@{add\_movie}!catalog.h@{catalog.h}}
+\doxysubsubsection{\texorpdfstring{add\_movie()}{add\_movie()}}
+{\footnotesize\ttfamily void add\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$}]{catalog,  }\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie }\end{DoxyParamCaption})}
+
+
+
+Função para adicionar um filme a um catálogo. 
+
+Caso não haja espaço para adicioná-\/lo, nada é feito. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em catalog} & Catálogo a ser modificado. \\
+\hline
+\mbox{\texttt{ in}}  & {\em movie} & Filme a ser adicionado. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{catalog_8c_source_l00010}{10}} of file \mbox{\hyperlink{catalog_8c_source}{catalog.\+c}}.
+
+\mbox{\Hypertarget{catalog_8h_a0d039ce4574947f75061591fa2652f74}\label{catalog_8h_a0d039ce4574947f75061591fa2652f74}} 
+\index{catalog.h@{catalog.h}!delete\_movie@{delete\_movie}}
+\index{delete\_movie@{delete\_movie}!catalog.h@{catalog.h}}
+\doxysubsubsection{\texorpdfstring{delete\_movie()}{delete\_movie()}}
+{\footnotesize\ttfamily void delete\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$}]{catalog,  }\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie }\end{DoxyParamCaption})}
+
+
+
+Deleta um movie baseado no seu ID. 
+
+Para deleção, apenas sobrecrevemo-\/o. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em catalog} & Catálogo da onde o movie será tirado. \\
+\hline
+\mbox{\texttt{ in}}  & {\em movie} & \mbox{\hyperlink{struct_movie}{Movie}} com o ID do filme a ser removido. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{catalog_8c_source_l00037}{37}} of file \mbox{\hyperlink{catalog_8c_source}{catalog.\+c}}.
+
+\mbox{\Hypertarget{catalog_8h_a25589e4bb85d7ffddc2f64af35e05a23}\label{catalog_8h_a25589e4bb85d7ffddc2f64af35e05a23}} 
+\index{catalog.h@{catalog.h}!update\_movie@{update\_movie}}
+\index{update\_movie@{update\_movie}!catalog.h@{catalog.h}}
+\doxysubsubsection{\texorpdfstring{update\_movie()}{update\_movie()}}
+{\footnotesize\ttfamily void update\+\_\+movie (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_catalog}{Catalog}} $\ast$}]{catalog,  }\item[{\mbox{\hyperlink{struct_movie}{Movie}}}]{movie }\end{DoxyParamCaption})}
+
+
+
+Modifica um filme no catálogo com as informações passadas. 
+
+Baseado no movie-\/\texorpdfstring{$>$}{>}id, modifica os dados deste no catálogo. Por enquanto, apenas adição de gênero é suportada. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em catalog} & Lista de filmes contendo o filme a ser alterado. \\
+\hline
+\mbox{\texttt{ in}}  & {\em movie} & As informações a serem atualizadas estarão preenchidas. O resto deve estar vazio enquanto que o ID é obirgatório. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{catalog_8c_source_l00023}{23}} of file \mbox{\hyperlink{catalog_8c_source}{catalog.\+c}}.
+
