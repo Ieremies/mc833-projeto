@@ -2,6 +2,7 @@
 ** server.c -- a stream socket server demo
 */
 
+#include "../front/server.c"
 #include "../data/catalog.h"
 #include "../utils/net_utils.h"
 #include <arpa/inet.h>
@@ -20,86 +21,17 @@
 
 #define BACKLOG 10 // how many pending connections queue will hold
 
-int SOCKFD;      // global to be closed on exit
-Catalog CATALOG; // global to all handlers task
+int SOCKFD; // global to be closed on exit
 
 void sigchld_handler(int s) {
     (void)s; // quiet unused variable warning
 
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
-    while (waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
     errno = saved_errno;
 }
-
-/**===========================================================================*/
-/**
- * @name Interface com o banco de dados.
- * Funções responsáveis por interagir com as informações,
- * alheia de qualquer protocolo de rede.
- * @{
- */
-
-/**
- * @brief Summary
- * @details Description
- * @param[in] movie Description
- * @param[in] socket Description
- */
-void post_movie(Movie *movie, int socket) { add_movie(&CATALOG, movie); }
-
-/**
- * @brief Função responsável por atualizar as informações de um filme.
- * @details As informações que vierem preenchidas serão aquelas a serem
- * atualizadas. O filme será determinado pelo ID, único campo obrigatório.
- * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
- * o resto vazio.
- */
-void put_movie(Movie *movie, int socket) { update_movie(&CATALOG, movie); }
-
-/**
- * @brief Função responsável por recuperar informações.
- * @details Retorna os filmes que atendem os critérios de filtragem.
- * @return Struct Respos com todo os filmes filtrados.
- */
-void get_movie(Movie *movie, int socket) {
-    Response response;
-    char buf[sizeof(Response)];
-
-    memset(&response, 0, sizeof(Response));
-    response.data = CATALOG;
-    if (movie->id != ALL)
-        filter_by_id(&response.data, movie);
-    if (movie->num_genres != 0)
-        filter_by_genres(&response.data, movie);
-    memcpy(buf, &response, sizeof(Response));
-
-    // Sending procedure:
-    size_t aux;
-    size_t sent = 0, total = sizeof(response.data.size) +
-                             response.data.size * sizeof(Movie);
-    while (sent < total) {
-        aux = send(socket, &buf[sent], total - sent, 0);
-        if (aux == -1)
-            perror("send");
-        sent += aux;
-    }
-}
-
-/**
- * @brief Summary
- * @details Description
- * @param[in] movie Description
- * @param[in] socket Description
- */
-void del_movie(Movie *movie, int socket) { delete_movie(&CATALOG, movie); }
-/**
- * @}
- */
-
-/**===========================================================================*/
-void (*handlers[])(Movie *, int) = {post_movie, get_movie, put_movie,
-                                    del_movie};
 
 /**
  * @brief Função que espera por uma conexão.
@@ -163,7 +95,7 @@ void load_backup() {
  * @details Fechamos o socket, fazemos o backup do catálogo e terminamos o
  * programa.
  */
-void sigint_handler(int sig_num) { // Signal Handler for SIGINT
+void sigint_handler(int sig_num) {
     close(SOCKFD);
     system("clear");
     printf("server: exiting...\n");
