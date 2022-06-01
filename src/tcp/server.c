@@ -15,6 +15,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #define PORT "3490" // the port users will be connecting to
@@ -22,6 +23,7 @@
 #define BACKLOG 10 // how many pending connections queue will hold
 
 int SOCKFD; // global to be closed on exit
+int START_TIME;
 
 void sigchld_handler(int s) {
     (void)s; // quiet unused variable warning
@@ -50,6 +52,9 @@ void handle_client(int socket) {
             printf("\nInvalid operation\n");
             continue;
         }
+
+        printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
+
 #pragma omp critical(Catalog)
         handlers[payload.op](&payload.movie, socket); // execute the action
     }
@@ -115,6 +120,9 @@ int main(int argc, char *argv[]) {
     int yes = 1;
     char s[INET6_ADDRSTRLEN];
     int rv;
+
+    START_TIME = time(NULL);
+    printf("[%d] : Server started.\n", (int)time(NULL) - START_TIME);
 
     if (argc == 2 && strcmp(argv[1], "load") == 0)
         load_backup();

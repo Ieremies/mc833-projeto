@@ -12,11 +12,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <time.h>
 #include <unistd.h>
 
 #define PORT "3490" // the port client we will be connecting to
 
 int SOCKFD;
+int START_TIME;
 
 /**
  * @brief Função para enviar o fechamento de conexão.
@@ -57,6 +59,8 @@ void handle_get(char cmd) {
     memcpy(&response.data.movie_list, buf, total);
 
     get_handlers[cmd](response);
+
+    printf("[%d] : GET response received.\n", (int)time(NULL) - START_TIME);
 }
 
 /**
@@ -106,6 +110,9 @@ int main(int argc, char *argv[]) {
     struct addrinfo hints, *servinfo, *p;
     int rv;
     char s[INET6_ADDRSTRLEN];
+
+    START_TIME = time(NULL);
+    printf("[%d] : Client started.\n", (int)time(NULL) - START_TIME);
 
     if (argc != 2) {
         fprintf(stderr, "usage: client hostname\n");
