@@ -1,4 +1,5 @@
 #include "../utils/net_utils.h"
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -16,9 +17,8 @@ Catalog CATALOG; // global to all handlers task
  * @brief Summary
  * @details Description
  * @param[in] movie Description
- * @param[in] socket Description
  */
-void post_movie(Movie *movie, int socket) { add_movie(&CATALOG, movie); }
+void *post_movie(Movie *movie) { add_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por atualizar as informações de um filme.
@@ -27,49 +27,33 @@ void post_movie(Movie *movie, int socket) { add_movie(&CATALOG, movie); }
  * @param[in] movie Struct com as informações a serem atualizadas preenchidas e
  * o resto vazio.
  */
-void put_movie(Movie *movie, int socket) { update_movie(&CATALOG, movie); }
+void *put_movie(Movie *movie) { update_movie(&CATALOG, movie); }
 
 /**
  * @brief Função responsável por recuperar informações.
  * @details Retorna os filmes que atendem os critérios de filtragem.
  * @return Struct Respos com todo os filmes filtrados.
  */
-void get_movie(Movie *movie, int socket) {
-    Response response;
-    char buf[sizeof(Response)];
-
-    memset(&response, 0, sizeof(Response));
-    response.data = CATALOG;
+void *get_movie(Movie *movie) {
+    Response *response = calloc(1, sizeof(Response));
+    response->data = CATALOG;
     if (movie->id != ALL)
-        filter_by_id(&response.data, movie);
+        filter_by_id(&response->data, movie);
     if (movie->num_genres != 0)
-        filter_by_genres(&response.data, movie);
-    memcpy(buf, &response, sizeof(Response));
+        filter_by_genres(&response->data, movie);
 
-    // Sending procedure:
-    size_t aux;
-    size_t sent = 0, total = sizeof(response.data.size) +
-                             response.data.size * sizeof(Movie);
-    while (sent < total) {
-        // BUG Esse send pode mudar no UDP
-        aux = send(socket, &buf[sent], total - sent, 0);
-        if (aux == -1)
-            perror("send");
-        sent += aux;
-    }
+    return response;
 }
 
 /**
  * @brief Summary
  * @details Description
  * @param[in] movie Description
- * @param[in] socket Description
  */
-void del_movie(Movie *movie, int socket) { delete_movie(&CATALOG, movie); }
+void *del_movie(Movie *movie) { delete_movie(&CATALOG, movie); }
 /**
  * @}
  */
 
 /**===========================================================================*/
-void (*handlers[])(Movie *, int) = {post_movie, get_movie, put_movie,
-                                    del_movie};
+void *(*handlers[])(Movie *) = {post_movie, get_movie, put_movie, del_movie};

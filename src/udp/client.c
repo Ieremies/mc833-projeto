@@ -36,8 +36,9 @@ void handle_get(char cmd, struct addrinfo *p) {
         recvfrom(SOCKFD, &response.data.size, sizeof(response.data.size), 0,
                  (struct sockaddr *)&their_addr, &addr_len);
     if (aux == -1) {
-        perror("client: recvfrom");
-        exit(1);
+        printf("\nError while receiving data from server\n");
+        sleep(1);
+        return;
     }
 
     // receive the movie list of the response:
@@ -46,8 +47,9 @@ void handle_get(char cmd, struct addrinfo *p) {
         aux = recvfrom(SOCKFD, &buf[rec], total - rec, 0,
                        (struct sockaddr *)&their_addr, &addr_len);
         if (aux == -1) {
-            perror("client: recvfrom");
-            exit(1);
+            printf("\nError while receiving data from server\n");
+            sleep(1);
+            return;
         }
         rec += aux;
     }
@@ -71,7 +73,7 @@ void sigint_handler(int sig_num) {
 
 /**
  * @brief Função de controle do menu.
- * @param[in] p Iformações do servidor.
+ * @param[in] p Informações do servidor.
  * @details A cada iteração do menu, lemos um caracter que indica qual o comando
  * a ser realizado.
  */
@@ -145,6 +147,13 @@ int main(int argc, char *argv[]) {
     // Make sure the socket will be cleaned and the user will send an EXIT:
     signal(SIGINT, sigint_handler);
 
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000; // 100ms
+    if (setsockopt(SOCKFD, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        perror("client: timeout");
+        exit(3);
+    }
     handle_user(p);
     close(SOCKFD);
 

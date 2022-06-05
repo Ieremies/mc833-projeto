@@ -19,9 +19,12 @@ int START_TIME;
 
 /**
  * @brief Função que cuida da requisição de um cliente.
+ * @param[in] p Informações do cliente.
  */
-void handle_client() {
+void handle_client(struct addrinfo *p) {
     Payload payload;
+    Response *response;
+    char buf[sizeof(Response)];
     struct sockaddr_storage their_addr; // connector's address information
     socklen_t addr_len = sizeof(their_addr);
 
@@ -38,7 +41,25 @@ void handle_client() {
         return;
     }
 
-    handlers[payload.op](&payload.movie, SOCKFD); // execute the action
+    response = handlers[payload.op](&payload.movie); // execute the action
+
+    if (payload.op == GET) { // Sending procedure:
+        size_t aux;
+        size_t sent = 0, total = sizeof(response->data.size) +
+                                 response->data.size * sizeof(Movie);
+        memcpy(buf, response, sizeof(Response));
+        free(response);
+        while (sent < total) {
+            aux = sendto(SOCKFD, &buf[sent], total - sent, 0, p->ai_addr,
+                         p->ai_addrlen);
+            (struct sockaddr *)&their_addr, &addr_len);
+            if (numbytes == -1) {
+                printf("sendto error.\n");
+                return;
+            }
+            sent += aux;
+        }
+    }
 }
 
 /**
@@ -105,8 +126,17 @@ int main(int argc, char *argv[]) {
 
     // Make sure the socket will be cleaned:
     signal(SIGINT, sigint_handler);
+
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000; // 100ms
+    if (setsockopt(SOCKFD, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        perror("server: timeout");
+        exit(3);
+    }
+
     while (1) {
-        handle_client();
+        handle_client(p);
         backup(&CATALOG);
     }
 }

@@ -28,6 +28,8 @@ int START_TIME;
  */
 void handle_client(int _socket) {
     Payload payload;
+    Response *response;
+    char buf[sizeof(Response)];
     while (1) {
         if (recv(_socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
@@ -42,7 +44,21 @@ void handle_client(int _socket) {
         printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
 
 #pragma omp critical(Catalog)
-        handlers[payload.op](&payload.movie, _socket); // execute the action
+        response = handlers[payload.op](&payload.movie); // execute the action
+
+        if (payload.op == GET) { // Sending procedure:
+            size_t aux;
+            size_t sent = 0, total = sizeof(response->data.size) +
+                                     response->data.size * sizeof(Movie);
+            memcpy(buf, &response, sizeof(Response));
+            free(response);
+            while (sent < total) {
+                aux = send(SOCKFD, &buf[sent], total - sent, 0);
+                if (aux == -1)
+                    perror("send");
+                sent += aux;
+            }
+        }
     }
 }
 
