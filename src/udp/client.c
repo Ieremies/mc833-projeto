@@ -14,21 +14,10 @@
 #include <time.h>
 #include <unistd.h>
 
-#define PORT "3490" // the port client we will be connecting to
+#define PORT "4950" // the port users will be connecting to
 
 int SOCKFD;
 int START_TIME;
-
-/**
- * @brief Função para enviar o fechamento de conexão.
- * @details Envia um payload com a operação EXIT.
- */
-void send_exit() {
-    Payload payload;
-    payload.op = EXIT;
-    if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
-        perror("send");
-}
 
 /**
  * @brief Função que aguarda o retorno de operações get.
@@ -89,8 +78,6 @@ void handle_user() {
         }
         print_menu();
     }
-
-    send_exit();
 }
 
 /**
@@ -99,7 +86,6 @@ void handle_user() {
 void sigint_handler(int sig_num) {
     system("clear");
     printf("client: exiting...\n");
-    send_exit();
     close(SOCKFD);
     sleep(1);
     exit(0);
@@ -108,7 +94,7 @@ void sigint_handler(int sig_num) {
 int main(int argc, char *argv[]) {
     struct addrinfo hints, *servinfo, *p;
     int rv;
-    char s[INET6_ADDRSTRLEN];
+    ssize_t numbytes;
 
     START_TIME = time(NULL);
     printf("[%d] : Client started.\n", (int)time(NULL) - START_TIME);
@@ -119,12 +105,12 @@ int main(int argc, char *argv[]) {
     }
 
     memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+    hints.ai_socktype = SOCK_DGRAM;
 
     if ((rv = getaddrinfo(argv[1], PORT, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
+        exit(1);
     }
 
     // Loop through all the results and connect to the first we can:
@@ -135,23 +121,20 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if (connect(SOCKFD, p->ai_addr, p->ai_addrlen) == -1) {
-            perror("client: connect");
-            close(SOCKFD);
-            continue;
-        }
-
         break;
     }
 
     if (p == NULL) {
-        fprintf(stderr, "client: failed to connect\n");
-        return 2;
+        fprintf(stderr, "client: failed to create socket\n");
+        exit(2);
     }
 
-    inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr), s,
-              sizeof s);
-    printf("client: connecting to %s\n", s);
+    numbytes =
+        sendto(SOCKFD, "ola", 4 * sizeof(char), 0, p->ai_addr, p->ai_addrlen);
+    if (numbytes == -1) {
+        perror("client: sendto");
+        exit(1);
+    }
     sleep(1);
 
     freeaddrinfo(servinfo); // all done with this structure
@@ -159,7 +142,7 @@ int main(int argc, char *argv[]) {
     // Make sure the socket will be cleaned and the user will send an EXIT:
     signal(SIGINT, sigint_handler);
 
-    handle_user();
+    printf("client: sent %zd bytes to %s\n", numbytes, argv[1]);
     close(SOCKFD);
 
     return 0;

@@ -14,9 +14,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#define PORT "3490" // the port users will be connecting to
+#define PORT "4950" // the port users will be connecting to
 
-#define BACKLOG 10 // how many pending connections queue will hold
+#define MAXBUFLEN 100
 
 int SOCKFD; // global to be closed on exit
 int START_TIME;
@@ -41,7 +41,6 @@ void handle_client(int socket) {
 
         printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
 
-#pragma omp critical(Catalog)
         handlers[payload.op](&payload.movie, socket); // execute the action
     }
 }
@@ -63,14 +62,13 @@ void sigint_handler(int sig_num) {
 int main(int argc, char *argv[]) {
     system("clear");
     CATALOG.size = 0;
-    int new_fd, code; // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
-    struct sockaddr_storage their_addr; // connector's address information
-    socklen_t sin_size;
-    struct sigaction sa;
-    int yes = 1;
-    char s[INET6_ADDRSTRLEN];
     int rv;
+    ssize_t numbytes;
+    struct sockaddr_storage their_addr; // connector's address information
+    char buf[MAXBUFLEN];
+    socklen_t addr_len;
+    char s[INET6_ADDRSTRLEN];
 
     START_TIME = time(NULL);
     printf("[%d] : Server started.\n", (int)time(NULL) - START_TIME);
@@ -78,14 +76,14 @@ int main(int argc, char *argv[]) {
     if (argc == 2 && strcmp(argv[1], "load") == 0)
         load_backup(&CATALOG);
 
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC; // either ipv4 or ipv6
-    hints.ai_socktype = SOCK_STREAM;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+    hints.ai_socktype = SOCK_DGRAM;
     hints.ai_flags = AI_PASSIVE; // use my IP
 
     if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
+        exit(1);
     }
 
     // Loop through all the results and bind to the first we can:
@@ -94,13 +92,6 @@ int main(int argc, char *argv[]) {
         if (SOCKFD == -1) {
             perror("server: socket");
             continue;
-        }
-
-        // Check if the socket is ALL clear to be used.
-        code = setsockopt(SOCKFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-        if (code == -1) {
-            perror("setsockopt");
-            exit(1);
         }
 
         if (bind(SOCKFD, p->ai_addr, p->ai_addrlen) == -1) {
@@ -112,51 +103,35 @@ int main(int argc, char *argv[]) {
         break;
     }
 
+    if (p == NULL) {
+        fprintf(stderr, "server: failed to bind socket\n");
+        exit(2);
+    }
+
     freeaddrinfo(servinfo); // all done with this structure
 
-    if (p == NULL) {
-        fprintf(stderr, "server: failed to bind\n");
-        exit(1);
-    }
-
-    if (listen(SOCKFD, BACKLOG) == -1) {
-        perror("listen");
-        exit(1);
-    }
-
-    sa.sa_handler = sigchld_handler; // reap all dead processes
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        perror("sigaction");
-        exit(1);
-    }
+    printf("server: waiting for connections...\n");
 
     // Make sure the socket will be cleaned:
     signal(SIGINT, sigint_handler);
 
-    printf("server: waiting for connections...\n");
-
-#pragma omp parallel
-#pragma omp single nowait
-    while (1) { // main accept() loop
-        sin_size = sizeof(their_addr);
-        new_fd = accept(SOCKFD, (struct sockaddr *)&their_addr, &sin_size);
-        if (new_fd == -1) {
-            perror("accept");
-            continue;
+    addr_len = sizeof(their_addr);
+    const char *inet_address;
+    while (1) {
+        numbytes = recvfrom(SOCKFD, buf, MAXBUFLEN - 1, 0,
+                            (struct sockaddr *)&their_addr, &addr_len);
+        if (numbytes == -1) {
+            perror("recvfrom");
+            exit(1);
         }
 
-        inet_ntop(their_addr.ss_family,
-                  get_in_addr((struct sockaddr *)&their_addr), s, sizeof s);
-        printf("server: got connection from %s\n", s);
-
-#pragma omp task firstprivate(new_fd) // this is the child task
-        {
-            handle_client(new_fd);
-            close(new_fd);
-#pragma omp critical(Backup)
-            backup(&CATALOG);
-        }
+        inet_address = inet_ntop(their_addr.ss_family,
+                                 get_in_addr((struct sockaddr *)&their_addr), s,
+                                 sizeof(s));
+        printf("server: got packet from %s\n", inet_address);
+        printf("server: packet is %zd bytes long\n", numbytes);
+        buf[numbytes] = '\0';
+        printf("server: packet contains \"%s\"\n", buf);
+        backup(&CATALOG);
     }
 }
