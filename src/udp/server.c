@@ -3,9 +3,7 @@
 */
 
 #include "../front/server.c"
-#include <arpa/inet.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,33 +14,31 @@
 
 #define PORT "4950" // the port users will be connecting to
 
-#define MAXBUFLEN 100
-
 int SOCKFD; // global to be closed on exit
 int START_TIME;
 
 /**
- * @brief Função que espera por uma conexão.
- * @details Em um laço infinito, esperamos uma nova conexão chegar.
- * @param[in] socket Socket a escutar.
+ * @brief Função que cuida da requisição de um cliente.
  */
-void handle_client(int socket) {
+void handle_client() {
     Payload payload;
-    while (1) {
-        if (recv(socket, &payload, sizeof(Payload), 0) == -1)
-            perror("recv");
+    struct sockaddr_storage their_addr; // connector's address information
+    socklen_t addr_len = sizeof(their_addr);
 
-        if (payload.op == EXIT)
-            break;
-        if (payload.op < 0 || payload.op > EXIT) {
-            printf("\nInvalid operation\n");
-            continue;
-        }
-
-        printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
-
-        handlers[payload.op](&payload.movie, socket); // execute the action
+    ssize_t numbytes = recvfrom(SOCKFD, &payload, sizeof(Payload), 0,
+                                (struct sockaddr *)&their_addr, &addr_len);
+    if (numbytes == -1) {
+        printf("recvfrom error.\n");
+        return;
     }
+    printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
+
+    if (payload.op < 0 || payload.op > EXIT) {
+        printf("\nInvalid operation.\n");
+        return;
+    }
+
+    handlers[payload.op](&payload.movie, SOCKFD); // execute the action
 }
 
 /**
@@ -56,7 +52,7 @@ void sigint_handler(int sig_num) {
     printf("server: exiting...\n");
     backup(&CATALOG);
     sleep(1);
-    exit(0);
+    exit(sig_num);
 }
 
 int main(int argc, char *argv[]) {
@@ -64,11 +60,6 @@ int main(int argc, char *argv[]) {
     CATALOG.size = 0;
     struct addrinfo hints, *servinfo, *p;
     int rv;
-    ssize_t numbytes;
-    struct sockaddr_storage their_addr; // connector's address information
-    char buf[MAXBUFLEN];
-    socklen_t addr_len;
-    char s[INET6_ADDRSTRLEN];
 
     START_TIME = time(NULL);
     printf("[%d] : Server started.\n", (int)time(NULL) - START_TIME);
@@ -114,24 +105,8 @@ int main(int argc, char *argv[]) {
 
     // Make sure the socket will be cleaned:
     signal(SIGINT, sigint_handler);
-
-    addr_len = sizeof(their_addr);
-    const char *inet_address;
     while (1) {
-        numbytes = recvfrom(SOCKFD, buf, MAXBUFLEN - 1, 0,
-                            (struct sockaddr *)&their_addr, &addr_len);
-        if (numbytes == -1) {
-            perror("recvfrom");
-            exit(1);
-        }
-
-        inet_address = inet_ntop(their_addr.ss_family,
-                                 get_in_addr((struct sockaddr *)&their_addr), s,
-                                 sizeof(s));
-        printf("server: got packet from %s\n", inet_address);
-        printf("server: packet is %zd bytes long\n", numbytes);
-        buf[numbytes] = '\0';
-        printf("server: packet contains \"%s\"\n", buf);
+        handle_client();
         backup(&CATALOG);
     }
 }

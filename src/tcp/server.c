@@ -57,7 +57,7 @@ void sigint_handler(int sig_num) {
     printf("server: exiting...\n");
     backup(&CATALOG);
     sleep(1);
-    exit(0);
+    exit(sig_num);
 }
 
 int main(int argc, char *argv[]) {

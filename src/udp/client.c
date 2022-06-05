@@ -3,9 +3,7 @@
 */
 
 #include "../front/client.c"
-#include <arpa/inet.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,25 +21,34 @@ int START_TIME;
  * @brief Função que aguarda o retorno de operações get.
  * @details Uma vez enviada, a operação GET espera um retorno.
  * @param[in] cmd Qual comando foi enviado.
+ * @param[in] p Iformações do servidor.
  */
-void handle_get(char cmd) {
+void handle_get(char cmd, struct addrinfo *p) {
     Response response;
     char buf[sizeof(Response)];
+    struct sockaddr_storage their_addr; // connector's address information
+    socklen_t addr_len = sizeof(their_addr);
     memset(buf, 0, sizeof(Response));
 
     // Receiving procedure:
     // receive the size of the response:
-    ssize_t aux;
-    recv(SOCKFD, &response.data.size, sizeof(response.data.size), 0);
-    if (aux == -1)
-        perror("recv");
+    ssize_t aux =
+        recvfrom(SOCKFD, &response.data.size, sizeof(response.data.size), 0,
+                 (struct sockaddr *)&their_addr, &addr_len);
+    if (aux == -1) {
+        perror("client: recvfrom");
+        exit(1);
+    }
 
     // receive the movie list of the response:
     size_t rec = 0, total = response.data.size * sizeof(Movie);
     while (rec < total) {
-        aux = recv(SOCKFD, &buf[rec], total - rec, 0);
-        if (aux == -1)
-            perror("recv");
+        aux = recvfrom(SOCKFD, &buf[rec], total - rec, 0,
+                       (struct sockaddr *)&their_addr, &addr_len);
+        if (aux == -1) {
+            perror("client: recvfrom");
+            exit(1);
+        }
         rec += aux;
     }
     memcpy(&response.data.movie_list, buf, total);
@@ -52,11 +59,23 @@ void handle_get(char cmd) {
 }
 
 /**
+ * @brief Signal handler for SIGINT
+ */
+void sigint_handler(int sig_num) {
+    system("clear");
+    printf("client: exiting...\n");
+    close(SOCKFD);
+    sleep(1);
+    exit(sig_num);
+}
+
+/**
  * @brief Função de controle do menu.
+ * @param[in] p Iformações do servidor.
  * @details A cada iteração do menu, lemos um caracter que indica qual o comando
  * a ser realizado.
  */
-void handle_user() {
+void handle_user(struct addrinfo *p) {
     char cmd;
     print_menu();
     while (scanf("%c", &cmd) == 1) {
@@ -68,10 +87,14 @@ void handle_user() {
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
             Payload payload = handlers[cmd]();
-            if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
-                perror("send");
+            ssize_t numbytes = sendto(SOCKFD, &payload, sizeof(Payload), 0,
+                                      p->ai_addr, p->ai_addrlen);
+            if (numbytes == -1) {
+                perror("client: sendto");
+                sigint_handler(1);
+            }
             if (payload.op == GET)
-                handle_get(cmd);
+                handle_get(cmd, p);
         } else {
             printf("\nInvalid command\n");
             sleep(1);
@@ -80,21 +103,9 @@ void handle_user() {
     }
 }
 
-/**
- * @brief Signal handler for SIGINT
- */
-void sigint_handler(int sig_num) {
-    system("clear");
-    printf("client: exiting...\n");
-    close(SOCKFD);
-    sleep(1);
-    exit(0);
-}
-
 int main(int argc, char *argv[]) {
     struct addrinfo hints, *servinfo, *p;
     int rv;
-    ssize_t numbytes;
 
     START_TIME = time(NULL);
     printf("[%d] : Client started.\n", (int)time(NULL) - START_TIME);
@@ -129,20 +140,12 @@ int main(int argc, char *argv[]) {
         exit(2);
     }
 
-    numbytes =
-        sendto(SOCKFD, "ola", 4 * sizeof(char), 0, p->ai_addr, p->ai_addrlen);
-    if (numbytes == -1) {
-        perror("client: sendto");
-        exit(1);
-    }
-    sleep(1);
-
     freeaddrinfo(servinfo); // all done with this structure
 
     // Make sure the socket will be cleaned and the user will send an EXIT:
     signal(SIGINT, sigint_handler);
 
-    printf("client: sent %zd bytes to %s\n", numbytes, argv[1]);
+    handle_user(p);
     close(SOCKFD);
 
     return 0;

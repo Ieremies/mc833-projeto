@@ -40,7 +40,6 @@ add_executable(udp-server
         src/utils/utils.c
         src/utils/net_utils.c
         src/utils/net_utils.h)
-target_link_libraries(udp-server PUBLIC OpenMP::OpenMP_C)
 
 add_executable(udp-client
         src/data/catalog.c

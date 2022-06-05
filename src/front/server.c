@@ -1,6 +1,5 @@
 #include "../utils/net_utils.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 Catalog CATALOG; // global to all handlers task
