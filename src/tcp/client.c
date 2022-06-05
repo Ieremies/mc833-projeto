@@ -27,7 +27,7 @@ void send_exit() {
     Payload payload;
     payload.op = EXIT;
     if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
-        perror("send");
+        perror("client: send");
 }
 
 /**
@@ -42,17 +42,21 @@ void handle_get(char cmd) {
 
     // Receiving procedure:
     // receive the size of the response:
-    ssize_t aux;
-    recv(SOCKFD, &response.data.size, sizeof(response.data.size), 0);
-    if (aux == -1)
-        perror("recv");
+    ssize_t aux =
+        recv(SOCKFD, &response.data.size, sizeof(response.data.size), 0);
+    if (aux == -1) {
+        perror("client: recv");
+        exit(1);
+    }
 
     // receive the movie list of the response:
     size_t rec = 0, total = response.data.size * sizeof(Movie);
     while (rec < total) {
         aux = recv(SOCKFD, &buf[rec], total - rec, 0);
-        if (aux == -1)
-            perror("recv");
+        if (aux == -1) {
+            perror("client: recv");
+            exit(1);
+        }
         rec += aux;
     }
     memcpy(&response.data.movie_list, buf, total);
@@ -60,6 +64,18 @@ void handle_get(char cmd) {
     get_handlers[cmd](response);
 
     printf("[%d] : GET response received.\n", (int)time(NULL) - START_TIME);
+}
+
+/**
+ * @brief Signal handler for SIGINT
+ */
+void sigint_handler(int sig_num) {
+    system("clear");
+    printf("client: exiting...\n");
+    send_exit();
+    close(SOCKFD);
+    sleep(1);
+    exit(sig_num);
 }
 
 /**
@@ -79,8 +95,10 @@ void handle_user() {
         // Checks if is a valid command:
         if (cmd >= 0 && cmd < sizeof(handlers) / sizeof(void *)) {
             Payload payload = handlers[cmd]();
-            if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1)
-                perror("send");
+            if (send(SOCKFD, &payload, sizeof(Payload), 0) == -1) {
+                perror("client: send");
+                sigint_handler(1);
+            }
             if (payload.op == GET)
                 handle_get(cmd);
         } else {
@@ -91,18 +109,6 @@ void handle_user() {
     }
 
     send_exit();
-}
-
-/**
- * @brief Signal handler for SIGINT
- */
-void sigint_handler(int sig_num) {
-    system("clear");
-    printf("client: exiting...\n");
-    send_exit();
-    close(SOCKFD);
-    sleep(1);
-    exit(0);
 }
 
 int main(int argc, char *argv[]) {

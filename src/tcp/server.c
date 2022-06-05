@@ -22,27 +22,27 @@ int SOCKFD; // global to be closed on exit
 int START_TIME;
 
 /**
- * @brief Função que espera por uma conexão.
- * @details Em um laço infinito, esperamos uma nova conexão chegar.
- * @param[in] socket Socket a escutar.
+ * @brief Função que cuida de uma conexão com um cliente.
+ * @details Em um laço infinito, esperamos uma nova requisição chegar.
+ * @param[in] _socket Socket a escutar.
  */
-void handle_client(int socket) {
+void handle_client(int _socket) {
     Payload payload;
     while (1) {
-        if (recv(socket, &payload, sizeof(Payload), 0) == -1)
+        if (recv(_socket, &payload, sizeof(Payload), 0) == -1)
             perror("recv");
 
         if (payload.op == EXIT)
             break;
         if (payload.op < 0 || payload.op > EXIT) {
-            printf("\nInvalid operation\n");
+            printf("\nInvalid operation.\n");
             continue;
         }
 
         printf("[%d] : Payload received.\n", (int)time(NULL) - START_TIME);
 
 #pragma omp critical(Catalog)
-        handlers[payload.op](&payload.movie, socket); // execute the action
+        handlers[payload.op](&payload.movie, _socket); // execute the action
     }
 }
 
