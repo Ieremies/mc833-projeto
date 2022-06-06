@@ -23,7 +23,8 @@ void add_movie(Catalog *catalog, Movie *movie) {
 void update_movie(Catalog *catalog, Movie *movie) {
     for (int i = 0; i < catalog->size; i++)
         if (movie->id == catalog->movie_list[i].id) {
-            add_genre(&catalog->movie_list[i], movie->genre_list[0]);
+            for (int j = 0; j < movie->num_genres; j++)
+                add_genre(&catalog->movie_list[i], movie->genre_list[j]);
             return;
         }
 }
