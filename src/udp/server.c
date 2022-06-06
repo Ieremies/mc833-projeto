@@ -52,7 +52,6 @@ void handle_client(struct addrinfo *p) {
         while (sent < total) {
             aux = sendto(SOCKFD, &buf[sent], total - sent, 0, p->ai_addr,
                          p->ai_addrlen);
-            (struct sockaddr *)&their_addr, &addr_len);
             if (numbytes == -1) {
                 printf("sendto error.\n");
                 return;
@@ -89,7 +88,7 @@ int main(int argc, char *argv[]) {
         load_backup(&CATALOG);
 
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+    hints.ai_family = AF_INET; // set to AF_INET to use IPv4
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_flags = AI_PASSIVE; // use my IP
 
@@ -126,14 +125,6 @@ int main(int argc, char *argv[]) {
 
     // Make sure the socket will be cleaned:
     signal(SIGINT, sigint_handler);
-
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 100000; // 100ms
-    if (setsockopt(SOCKFD, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
-        perror("server: timeout");
-        exit(3);
-    }
 
     while (1) {
         handle_client(p);

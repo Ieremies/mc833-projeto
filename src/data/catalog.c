@@ -37,7 +37,10 @@ void update_movie(Catalog *catalog, Movie *movie) {
 void delete_movie(Catalog *catalog, Movie *movie) {
     for (int i = 0; i < catalog->size; i++)
         if (movie->id == catalog->movie_list[i].id) {
-            memcpy(&catalog->movie_list[i], &catalog->movie_list[i + 1],
+            if (i == catalog->size - 1) // Only clear the last position:
+                memset(&catalog->movie_list[i], 0, sizeof(Movie));
+            else // Move the rest of the array back one position:
+                memcpy(&catalog->movie_list[i], &catalog->movie_list[i + 1],
                    (catalog->size - i - 1) * sizeof(Movie));
             catalog->size--;
             return;
