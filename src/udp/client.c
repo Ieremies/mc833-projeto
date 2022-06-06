@@ -21,9 +21,8 @@ int START_TIME;
  * @brief Função que aguarda o retorno de operações get.
  * @details Uma vez enviada, a operação GET espera um retorno.
  * @param[in] cmd Qual comando foi enviado.
- * @param[in] p Iformações do servidor.
  */
-void handle_get(char cmd, struct addrinfo *p) {
+void handle_get(char cmd) {
     Response response;
     char buf[sizeof(Response)];
     struct sockaddr_storage their_addr; // connector's address information
@@ -53,7 +52,7 @@ void handle_get(char cmd, struct addrinfo *p) {
         }
         rec += aux;
     }
-    memcpy(&response.data.movie_list, buf, total);
+    memcpy(response.data.movie_list, buf, total);
 
     get_handlers[cmd](response);
 
@@ -96,7 +95,7 @@ void handle_user(struct addrinfo *p) {
                 sigint_handler(1);
             }
             if (payload.op == GET)
-                handle_get(cmd, p);
+                handle_get(cmd);
         } else {
             printf("\nInvalid command\n");
             sleep(1);
@@ -147,13 +146,6 @@ int main(int argc, char *argv[]) {
     // Make sure the socket will be cleaned and the user will send an EXIT:
     signal(SIGINT, sigint_handler);
 
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 100000; // 100ms
-    if (setsockopt(SOCKFD, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
-        perror("client: timeout");
-        exit(3);
-    }
     handle_user(p);
     close(SOCKFD);
 

@@ -44,14 +44,22 @@ void handle_client(struct addrinfo *p) {
     response = handlers[payload.op](&payload.movie); // execute the action
 
     if (payload.op == GET) { // Sending procedure:
-        size_t aux;
-        size_t sent = 0, total = sizeof(response->data.size) +
-                                 response->data.size * sizeof(Movie);
-        memcpy(buf, response, sizeof(Response));
+        // First send the size of the movie list:
+        size_t aux =
+            sendto(SOCKFD, &response->data.size, sizeof(response->data.size), 0,
+                   (struct sockaddr *)&their_addr, addr_len);
+        if (numbytes == -1) {
+            printf("sendto error.\n");
+            return;
+        }
+
+        // Send the full movie list:
+        size_t sent = 0, total = response->data.size * sizeof(Movie);
+        memcpy(buf, response->data.movie_list, total);
         free(response);
         while (sent < total) {
-            aux = sendto(SOCKFD, &buf[sent], total - sent, 0, p->ai_addr,
-                         p->ai_addrlen);
+            aux = sendto(SOCKFD, &buf[sent], total - sent, 0,
+                         (struct sockaddr *)&their_addr, addr_len);
             if (numbytes == -1) {
                 printf("sendto error.\n");
                 return;
