@@ -1,14 +1,15 @@
-#+Title: MC833 - Relatório do Projeto 1
+#+Title: MC833 - Relatório do Projeto UDP
 #+Author: Ieremies Romero, Lucas de Oliveira Silva
 #+options: num:nil toc:nil
 
 * Introdução
-Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão TCP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
+Este projeto tem como o objetivo desenvolver uma comunicação cliente-servidor utilizando uma conexão UDP. Para isso, utilizamos um servidor concorrente capaz de fornecer, guardar e atualizar informações sobre filmes. O cliente, é capaz de recuperar ou alterar essas informações via protocolo HTTP.
 
+# TODO Revisar a documentação
 Esse relatório tem por objetivo descrever o processo e as decisões. Para a documentação mais técnica, referencia-se aos arquivos fonte, ou de forma online no site [[https://ieremies.dev/mc833-projeto/html/]] ou via [[https://ieremies.dev/mc833-projeto/latex/refman.pdf][pdf]].
 
 * Descrição
-Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento de tais fica a cargo do cliente.
+Para esse projeto, desenhamos nosso sistema de forma modular e escalonável. Assim, o servidor possui operações simples e diretas, enquanto que o refinamento da apresentações de tais fica a cargo do cliente.
 
 Nosso servidor serve para fornecer uma lista de filme e suas informações. Ele pode ser utilizado como um armazém de informações que diversos clientes podem acessa-lo de forma assíncrona e fazer mudanças.
 
@@ -55,6 +56,8 @@ O servidor é capaz de servir as seguintes operações:
 - *PUT* :: baseado no ID de uma struct movie, modificamos as informações do tal filme baseado nas informações preenchidas na struct.
 - *DEL* :: baseado no ID de uma struct movie, removemos o filme com a mesma ID do catálogo.
 
+*** Backups
+Utilizamos um =sigint_handler()= para identificar quando o servidor está sendo finalizado pela sua máquina. Quando isso ocorre, salvamos o estado atual em um arquivo chamado =catalog_database.data=, o qual pode ser restaurado em execuções futuras do servidor. Isso pode ser feito passando o parâmetro "load" na execução do binário =server=.
 
 ** Cliente
 No lado do cliente fazemos algo muito parecido. Populamos a =struct addrinf= com as informações e, junto com a função =getaddrinfo()=, iteramos pelos possíveis sockets até conseguirmos nos conectar a algum com o =bind()=. Caso tudo isso tenha sido bem sucedido, fazemos a limpeza final antes de passar o controle para a função =handle_user()=.
@@ -63,7 +66,6 @@ O cliente comunica-se com o servidor mediante as operações acima listadas, mas
 
 *** Operações do cliente
 Do ponto de vista do cliente, ele pode realizar as seguintes operações:
-# TODO o id do filme!
 - cadastrar um novo filme, fornecendo suas informações.
 - acrescentar um gênero a um filme.
 - deletar um file a partir de seu identificador.
@@ -75,8 +77,3 @@ Do ponto de vista do cliente, ele pode realizar as seguintes operações:
 
 * Conclusão
 Assim, temos um servidor capaz de realizar operações e um cliente capaz de comunicar-se com o servidor e solicitar informações ao usuário.
-* UDP
-- [ ] Bloqueante
-- [ ] Confiabilidade
-- [ ] Facilidade de implementar
-- [ ] Falar no relatório sobre backup
